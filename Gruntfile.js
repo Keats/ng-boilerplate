@@ -3,6 +3,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-compass');
+
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-karma');
@@ -45,6 +47,17 @@ module.exports = function(grunt) {
       projectConfig.buildDirectory, projectConfig.releaseDirectory
     ],
 
+    compass: {
+      main: {
+        options: {
+          config: 'src/style/compass.rb',
+          cssDir: 'build/style',
+          sassDir: 'src/style',
+          force: true,
+        }
+      },
+    },
+
     // Compiles coffeescript
     coffee: {
       dev: {
@@ -83,6 +96,7 @@ module.exports = function(grunt) {
           libs.js,
           libs.css,
           projectConfig.buildDirectory + 'src/**/*.js',
+          projectConfig.buildDirectory + 'style/*.css',
           projectConfig.templatesApp,
           projectConfig.templatesCommon
         ]
@@ -220,6 +234,6 @@ module.exports = function(grunt) {
   });
 
 
-  grunt.registerTask('dev', ['html2js', 'coffeelint:src', 'coffee:dev', 'copy', 'index:dev']);
+  grunt.registerTask('dev', ['html2js', 'compass', 'coffeelint:src', 'coffee:dev', 'copy', 'index:dev']);
 
 };
