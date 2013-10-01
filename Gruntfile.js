@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-html2js');
@@ -40,6 +41,7 @@ module.exports = function(grunt) {
   ])
 
   var sourceFiles = ['src/**/*.coffee', '!src/**/*.tests.coffee'];
+  var testFiles = ['src/**/*.tests.coffee'];
 
   grunt.initConfig({
 
@@ -47,6 +49,7 @@ module.exports = function(grunt) {
       projectConfig.buildDirectory, projectConfig.releaseDirectory
     ],
 
+    // Build the foundation + custom files using compass
     compass: {
       main: {
         options: {
@@ -81,9 +84,9 @@ module.exports = function(grunt) {
           src: sourceFiles
         }
       },
-      test: {
+      tests: {
         files: {
-          src: [ '<%= app_files.coffeeunit %>' ]
+          src: testFiles
         }
       }
     },
@@ -111,7 +114,7 @@ module.exports = function(grunt) {
       libs_js: {
         files: [
           {
-            src: [ libs.js ],
+            src: libs.js,
             dest: projectConfig.buildDirectory,
             cwd: '.',
             expand: true
@@ -122,7 +125,7 @@ module.exports = function(grunt) {
       libs_css: {
         files: [
           {
-            src: [ libs.css ],
+            src: libs.css,
             dest: projectConfig.buildDirectory,
             cwd: '.',
             expand: true
@@ -133,12 +136,12 @@ module.exports = function(grunt) {
       assets: {
         files: [
           {
-            src: [ '**' ],
+            src: ['**'],
             dest: projectConfig.buildDirectory,
             cwd: 'src/assets',
             expand: true
           }
-        ]  
+        ]
       }
     },
 
@@ -156,7 +159,7 @@ module.exports = function(grunt) {
         options: {
           base: 'src/app'
         },
-        src: [ 'src/app/**/*.html' ],
+        src: ['src/app/**/*.html'],
         dest: projectConfig.templatesApp
       },
 
@@ -167,7 +170,7 @@ module.exports = function(grunt) {
         options: {
           base: 'src/common'
         },
-        src: [ 'src/common/**/*.html' ],
+        src: ['src/common/**/*.html'],
         dest: projectConfig.templatesCommon
       }
     },
@@ -176,22 +179,56 @@ module.exports = function(grunt) {
     karma: {
       options: {
         port: 9876,
-        runnerPort: 9999,
+        runnerPort: 9100,
         autoWatch: false,
+        urlRoot: '/',
         browsers: ['Firefox'],
-        background: true,
+        reporters: 'dots',
         files: testingFiles,
         preprocessors: {'**/*.coffee': 'coffee'},
-        plugins: ['karma-mocha', 'karma-firefox-launcher', 'karma-coffee-preprocessor'],
+        plugins: [
+          'karma-mocha',
+          'karma-firefox-launcher',
+          'karma-coffee-preprocessor',
+          'karma-phantomjs-launcher'
+        ],
         frameworks: ['mocha']
       },
-      continuous: {
-        browsers: ['PhantomJS']
-      },
       dev: {
-        reporters: 'dots',
+        background: true,
+        singleRun: false
+      },
+      complete: {
         singleRun: true,
-        background: false
+        background: false,
+        browsers: ['PhantomJS', 'Firefox']
+      }
+    },
+    // what to do when a file changes
+    watch: {
+      coffeeSrc: {
+        files: sourceFiles,
+        tasks: ['coffeelint:src', 'coffee', 'karma:dev:run']
+      },
+
+      coffeeTests: {
+        files: testingFiles,
+        tasks: ['coffeelint:tests', 'karma:dev:run']
+      },
+
+      sass: {
+        files: ['src/style/**/*.scss'],
+        tasks: ['compass:main']
+      },
+
+      templates: {
+        files: ['src/app/**/*.html', 'src/common/**/*.html'],
+        tasks: ['html2js']
+      },
+
+      index: {
+        files: ['src/index.html'],
+        tasks: ['index:dev']
       }
     }
 
@@ -202,10 +239,10 @@ module.exports = function(grunt) {
   function filterFor(files, regex) {
     return files.filter(function (file) {
       return file.match(regex);
-    });  
+    });
   }
 
-  /** 
+  /**
    * The index.html template includes the stylesheet and javascript sources
    * based on dynamic names calculated in this Gruntfile. This task assembles
    * the list into variables for the template to use and then runs the
@@ -221,7 +258,7 @@ module.exports = function(grunt) {
       return file.replace(dirRE, '');
     });
 
-    grunt.file.copy('src/index.html', this.data.dir + '/index.html', { 
+    grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
       process: function (contents, path) {
         return grunt.template.process( contents, {
           data: {
@@ -233,7 +270,19 @@ module.exports = function(grunt) {
     });
   });
 
-
-  grunt.registerTask('dev', ['html2js', 'compass', 'coffeelint:src', 'coffee:dev', 'copy', 'index:dev']);
+  // this doesn't run tests on first launch
+  grunt.registerTask(
+    'dev',
+    [
+      'karma:dev', // starts the karma server and browser
+      'html2js',
+      'compass',
+      'coffeelint:src',
+      'coffee:dev',
+      'copy',
+      'index:dev',
+      'watch'
+    ]
+  );
 
 };
