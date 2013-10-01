@@ -12,56 +12,22 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-karma');
 
-
-  var projectConfig = {
-    projectName: 'MyProject',
-    version: '0.0.0',
-
-    buildDirectory: 'build/',
-    releaseDirectory: 'release/',
-    templatesFile: 'build/templates.js',
-  };
-
-
-  // Path to 3rd party js/css (installed via bower)
-  var libs = {
-    js: [
-      'libs/angular/angular.js',
-      'libs/angular-ui-router/release/angular-ui-router.js',
-    ],
-    jsMin: [
-      'libs/angular/angular.min.js',
-      'libs/angular-ui-router/release/angular-ui-router.min.js',
-    ],
-    css: []
-  }
-
-  // Contains all the files needed by Karma to run tests
-  var testingFiles = libs.js;
-  testingFiles = testingFiles.concat([
-    projectConfig.templatesApp,
-    projectConfig.templatesCommon,
-    'libs/chai/chai.js',
-    'src/.chai-asserts.js',
-    'libs/angular-mocks/angular-mocks.js',
-    'src/app/**/*.coffee',
-    'src/app/**/*.tests.coffee'
-  ])
-
-  var sourceFiles = ['src/**/*.coffee', '!src/**/*.tests.coffee'];
-  var testFiles = ['src/**/*.tests.coffee'];
+  var config = require('./misc/build-config.js')(grunt);
 
   grunt.initConfig({
 
-    clean: [projectConfig.buildDirectory, projectConfig.releaseDirectory],
+    clean: {
+      build: config.buildDirectory,
+      release: config.releaseDirectory
+    },
 
     // Build the foundation + custom files using compass
     compass: {
       main: {
         options: {
-          config: 'src/style/compass.rb',
-          cssDir: 'build/style',
-          sassDir: 'src/style',
+          config: config.compassConfigFile,
+          cssDir: config.cssDirectory,
+          sassDir: config.sassDirectory,
           force: true,
           environment: 'production'
         }
@@ -72,15 +38,13 @@ module.exports = function(grunt) {
     coffee: {
       dev: {
         expand: true,
-        cwd: '.',
-        src: sourceFiles,
-        dest: projectConfig.buildDirectory,
+        src: config.sourceFileFilter,
+        dest: config.buildDirectory,
         ext: '.js'
       },
       release: {
-        files: {
-          'release/scripts/app.js': sourceFiles
-        }
+        src: config.sourceFileFilter,
+        dest: config.releaseAppMinPath
       }
     },
 
@@ -93,12 +57,12 @@ module.exports = function(grunt) {
       },
       src: {
         files: {
-          src: sourceFiles
+          src: config.sourceFileFilter
         }
       },
       tests: {
         files: {
-          src: testFiles
+          src: config.testFileFilter
         }
       }
     },
@@ -106,23 +70,12 @@ module.exports = function(grunt) {
     // Creates the index page (ie, add js and css links)
     index: {
       dev: {
-        dir: projectConfig.buildDirectory,
-        src: [
-          libs.js,
-          libs.css,
-          projectConfig.buildDirectory + 'src/**/*.js',
-          projectConfig.buildDirectory + 'style/*.css',
-          projectConfig.templatesFile
-        ]
+        dir: config.buildDirectory,
+        src: config.indexTask.dev
       },
       release: {
-        dir: projectConfig.releaseDirectory,
-        src: [
-          projectConfig.releaseDirectory + 'scripts/libs.js',
-          projectConfig.releaseDirectory + 'scripts/app.js',
-          projectConfig.releaseDirectory + 'scripts/templates.js',
-          projectConfig.releaseDirectory + 'style/*.css',
-        ]
+        dir: config.releaseDirectory,
+        src: config.indexTask.release
       }
     },
 
@@ -132,9 +85,8 @@ module.exports = function(grunt) {
       libs_js: {
         files: [
           {
-            src: libs.js,
-            dest: projectConfig.buildDirectory,
-            cwd: '.',
+            src: config.libs.js,
+            dest: config.buildDirectory,
             expand: true
           }
         ]
@@ -143,20 +95,19 @@ module.exports = function(grunt) {
       libs_css: {
         files: [
           {
-            src: libs.css,
-            dest: projectConfig.buildDirectory,
-            cwd: '.',
+            src: config.libs.css,
+            dest: config.buildDirectory,
             expand: true
           }
         ]
       },
-
+      // Using src=** and cwd so it doesn't include the src/ folder when copying
       assets: {
         files: [
           {
             src: ['**'],
-            dest: projectConfig.buildDirectory,
-            cwd: 'src/assets',
+            dest: config.buildDirectory,
+            cwd: config.assetsDirectory,
             expand: true
           }
         ]
@@ -166,8 +117,8 @@ module.exports = function(grunt) {
         files: [
           {
             src: ['**'],
-            dest: projectConfig.releaseDirectory,
-            cwd: 'src/assets',
+            dest: config.releaseDirectory,
+            cwd: config.assetsDirectory,
             expand: true
           }
         ]
@@ -176,9 +127,9 @@ module.exports = function(grunt) {
       releaseCss: {
         files: [
           {
-            src: ['**'],
-            dest: projectConfig.releaseDirectory + 'style/',
-            cwd: 'build/style',
+            src: config.cssFilter,
+            dest: config.releaseDirectory + 'style/',
+            flatten: true,
             expand: true
           }
         ]
@@ -190,8 +141,8 @@ module.exports = function(grunt) {
         options: {
           module: 'templates'
         },
-        src: ['src/app/**/*.html', 'src/common/**/*.html'],
-        dest: projectConfig.templatesFile
+        src: config.templateFileFilter,
+        dest: config.convertedTemplatesPath
       }
     },
 
@@ -204,8 +155,10 @@ module.exports = function(grunt) {
         urlRoot: '/',
         browsers: ['Firefox'],
         reporters: 'dots',
-        files: testingFiles,
-        preprocessors: {'**/*.coffee': 'coffee'},
+        files: config.karmaFiles,
+        preprocessors: {
+          '**/*.coffee': 'coffee'
+        },
         plugins: [
           'karma-mocha',
           'karma-firefox-launcher',
@@ -227,49 +180,51 @@ module.exports = function(grunt) {
 
     uglify: {
       release: {
+        options: {
+          banner: config.banner
+        },
         files: {
-          'release/scripts/app.js': ['build/src/app/**/*.js', 'build/templates.js'],
+          'release/scripts/app.js': config.ownJsToMinifyFilter,
         }
       }
     },
 
     concat: {
-      release: {
-        src: libs.jsMin,
-        dest: 'release/scripts/libs.js'
+      releaseLibs: {
+        src: config.libs.jsMin,
+        dest: config.releaseLibsMinPath
       }
     },
 
     // what to do when a file changes
     watch: {
       coffeeSrc: {
-        files: sourceFiles,
+        files: config.sourceFileFilter,
         tasks: ['coffeelint:src', 'coffee', 'karma:dev:run']
       },
 
       coffeeTests: {
-        files: testFiles,
+        files: config.testFileFilter,
         tasks: ['coffeelint:tests', 'karma:dev:run']
       },
 
       sass: {
-        files: ['src/style/**/*.scss'],
+        files: config.sassFileFilter,
         tasks: ['compass:main']
       },
 
       templates: {
-        files: ['src/app/**/*.html', 'src/common/**/*.html'],
+        files: config.templateFileFilter,
         tasks: ['html2js']
       },
 
       index: {
-        files: ['src/index.html'],
+        files: config.indexFileFilter,
         tasks: ['index:dev']
       }
     }
 
   });
-
 
   // Filter files according to the given regex
   function filterFor(files, regex) {
@@ -294,9 +249,9 @@ module.exports = function(grunt) {
       return file.replace(dirRE, '');
     });
 
-    grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
+    grunt.file.copy(config.indexFileFilter, this.data.dir + '/index.html', {
       process: function (contents, path) {
-        return grunt.template.process( contents, {
+        return grunt.template.process(contents, {
           data: {
             scripts: jsFiles,
             styles: cssFiles
@@ -329,6 +284,9 @@ module.exports = function(grunt) {
     ]
   );
 
+  // Alias to run the full test suite
+  grunt.registerTask('test', ['karma:complete']);
+
   // This will create a release folder, containing the app ready to be deployed
   grunt.registerTask(
     'release',
@@ -338,9 +296,9 @@ module.exports = function(grunt) {
       'concat',
       'copy:releaseAssets',
       'copy:releaseCss',
-      'index:release'
+      'index:release',
+      'clean:build'
     ]
   );
-
 
 };
