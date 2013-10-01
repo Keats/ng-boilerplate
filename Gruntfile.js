@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     templatesCommon: 'build/templates-common.js'
   };
 
-  // Contains 3rd party js/css (installed via bower)
+  // Path to 3rd party js/css (installed via bower)
   var libs = {
     js: [
       'libs/angular/angular.js',
@@ -35,6 +35,7 @@ module.exports = function(grunt) {
     projectConfig.templatesApp,
     projectConfig.templatesCommon,
     'libs/chai/chai.js',
+    'src/.chai-asserts.js',
     'libs/angular-mocks/angular-mocks.js',
     'src/app/**/*.coffee',
     'src/app/**/*.tests.coffee'
