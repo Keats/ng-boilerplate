@@ -5,10 +5,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-karma');
+
 
   var projectConfig = {
     projectName: 'MyProject',
@@ -16,15 +19,19 @@ module.exports = function(grunt) {
 
     buildDirectory: 'build/',
     releaseDirectory: 'release/',
-    templatesApp: 'build/templates-app.js',
-    templatesCommon: 'build/templates-common.js'
+    templatesFile: 'build/templates.js',
   };
+
 
   // Path to 3rd party js/css (installed via bower)
   var libs = {
     js: [
       'libs/angular/angular.js',
       'libs/angular-ui-router/release/angular-ui-router.js',
+    ],
+    jsMin: [
+      'libs/angular/angular.min.js',
+      'libs/angular-ui-router/release/angular-ui-router.min.js',
     ],
     css: []
   }
@@ -46,9 +53,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    clean: [
-      projectConfig.buildDirectory, projectConfig.releaseDirectory
-    ],
+    clean: [projectConfig.buildDirectory, projectConfig.releaseDirectory],
 
     // Build the foundation + custom files using compass
     compass: {
@@ -58,8 +63,9 @@ module.exports = function(grunt) {
           cssDir: 'build/style',
           sassDir: 'src/style',
           force: true,
+          environment: 'production'
         }
-      },
+      }
     },
 
     // Compiles coffeescript
@@ -70,6 +76,11 @@ module.exports = function(grunt) {
         src: sourceFiles,
         dest: projectConfig.buildDirectory,
         ext: '.js'
+      },
+      release: {
+        files: {
+          'release/scripts/app.js': sourceFiles
+        }
       }
     },
 
@@ -101,16 +112,22 @@ module.exports = function(grunt) {
           libs.css,
           projectConfig.buildDirectory + 'src/**/*.js',
           projectConfig.buildDirectory + 'style/*.css',
-          projectConfig.templatesApp,
-          projectConfig.templatesCommon
+          projectConfig.templatesFile
         ]
       },
-      build: {
-
+      release: {
+        dir: projectConfig.releaseDirectory,
+        src: [
+          projectConfig.releaseDirectory + 'scripts/libs.js',
+          projectConfig.releaseDirectory + 'scripts/app.js',
+          projectConfig.releaseDirectory + 'scripts/templates.js',
+          projectConfig.releaseDirectory + 'style/*.css',
+        ]
       }
     },
 
     // Copy libs js/css and our assets over to the build directory
+    // TODO: check if i can improve that part
     copy: {
       libs_js: {
         files: [
@@ -143,36 +160,38 @@ module.exports = function(grunt) {
             expand: true
           }
         ]
+      },
+
+      releaseAssets: {
+        files: [
+          {
+            src: ['**'],
+            dest: projectConfig.releaseDirectory,
+            cwd: 'src/assets',
+            expand: true
+          }
+        ]
+      },
+
+      releaseCss: {
+        files: [
+          {
+            src: ['**'],
+            dest: projectConfig.releaseDirectory + 'style/',
+            cwd: 'build/style',
+            expand: true
+          }
+        ]
       }
     },
 
-    /**
-     * HTML2JS is a Grunt plugin that takes all of your template files and
-     * places them into JavaScript files as strings that are added to
-     * AngularJS's template cache. This means that the templates too become
-     * part of the initial payload as one JavaScript file. Neat!
-     */
     html2js: {
-      /**
-       * These are the templates from `src/app`.
-       */
-      app: {
+      all: {
         options: {
-          base: 'src/app'
+          module: 'templates'
         },
-        src: ['src/app/**/*.html'],
-        dest: projectConfig.templatesApp
-      },
-
-      /**
-       * These are the templates from `src/common`.
-       */
-      common: {
-        options: {
-          base: 'src/common'
-        },
-        src: ['src/common/**/*.html'],
-        dest: projectConfig.templatesCommon
+        src: ['src/app/**/*.html', 'src/common/**/*.html'],
+        dest: projectConfig.templatesFile
       }
     },
 
@@ -205,6 +224,22 @@ module.exports = function(grunt) {
         browsers: ['PhantomJS', 'Firefox']
       }
     },
+
+    uglify: {
+      release: {
+        files: {
+          'release/scripts/app.js': ['build/src/app/**/*.js', 'build/templates.js'],
+        }
+      }
+    },
+
+    concat: {
+      release: {
+        src: libs.jsMin,
+        dest: 'release/scripts/libs.js'
+      }
+    },
+
     // what to do when a file changes
     watch: {
       coffeeSrc: {
@@ -213,7 +248,7 @@ module.exports = function(grunt) {
       },
 
       coffeeTests: {
-        files: testingFiles,
+        files: testFiles,
         tasks: ['coffeelint:tests', 'karma:dev:run']
       },
 
@@ -251,7 +286,7 @@ module.exports = function(grunt) {
    */
   grunt.registerMultiTask('index', 'Process index.html template', function () {
     // This regex will remove the 'root' path when inserting in the template
-    var dirRE = new RegExp('^(build|dist)\/', 'g');
+    var dirRE = new RegExp('^(build|release)\/', 'g');
     var jsFiles = filterFor(this.filesSrc, /\.js$/).map(function (file) {
       return file.replace(dirRE, '');
     });
@@ -271,19 +306,41 @@ module.exports = function(grunt) {
     });
   });
 
-  // this doesn't run tests on first launch
+  // Builds the app without running the test, used in other tasks
   grunt.registerTask(
-    'dev',
+    'build',
     [
-      'karma:dev', // starts the karma server and browser
       'html2js',
       'compass',
       'coffeelint:src',
       'coffee:dev',
       'copy',
-      'index:dev',
+      'index:dev'
+    ]
+  );
+
+  // Task to run whil developing, will watch over changes and run tests/compile sass/etc
+  grunt.registerTask(
+    'dev',
+    [
+      'karma:dev', // starts the karma server and browser
+      'build',
       'watch'
     ]
   );
+
+  // This will create a release folder, containing the app ready to be deployed
+  grunt.registerTask(
+    'release',
+    [
+      'build',
+      'uglify',
+      'concat',
+      'copy:releaseAssets',
+      'copy:releaseCss',
+      'index:release'
+    ]
+  );
+
 
 };
