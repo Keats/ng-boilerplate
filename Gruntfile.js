@@ -39,11 +39,8 @@ module.exports = function(grunt) {
       dev: {
         expand: true, // keeping the hierarchy while developing
         src: config.sourceFileFilter,
-        dest: config.buildDirectory
-      },
-      release: {
-        src: config.sourceFileFilter,
-        dest: config.releaseAppMinPath
+        dest: config.buildDirectory,
+        ext: '.js'
       }
     },
 
@@ -80,7 +77,7 @@ module.exports = function(grunt) {
 
     // Copy libs js/css and our assets over to the build directory
     copy: {
-      libs_js: {
+      libsJs: {
         files: [
           {
             src: config.libs.js,
@@ -90,7 +87,7 @@ module.exports = function(grunt) {
         ]
       },
 
-      libs_css: {
+      libsCss: {
         files: [
           {
             src: config.libs.css,
@@ -125,9 +122,9 @@ module.exports = function(grunt) {
       releaseCss: {
         files: [
           {
-            src: config.cssFilter,
+            src: ['**'],
+            cwd: config.cssDirectory,
             dest: config.releaseDirectory + 'style/',
-            flatten: true,
             expand: true
           }
         ]
@@ -270,8 +267,10 @@ module.exports = function(grunt) {
       'html2js',
       'compass',
       'coffeelint:src',
-      'coffee:dev',
-      'copy',
+      'coffee',
+      'copy:libsJs',
+      'copy:libsCss',
+      'copy:assets',
       'index:dev'
     ]
   );
@@ -293,6 +292,7 @@ module.exports = function(grunt) {
   grunt.registerTask(
     'release',
     [
+      'clean',
       'build',
       'uglify',
       'concat',

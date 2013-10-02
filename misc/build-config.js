@@ -21,7 +21,7 @@ var getConfig = function(grunt) {
 	config.buildDirectory = 'build/';
 	config.releaseDirectory = 'release/';
 	config.miscDirectory = 'misc/';
-	config.assetsDirectory = 'src/assets';
+	config.assetsDirectory = 'src/assets/';
 
   // Output paths
   config.convertedTemplatesPath = config.buildDirectory + 'templates.js';
