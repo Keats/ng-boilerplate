@@ -37,10 +37,9 @@ module.exports = function(grunt) {
     // Compiles coffeescript
     coffee: {
       dev: {
-        expand: true,
+        expand: true, // keeping the hierarchy while developing
         src: config.sourceFileFilter,
-        dest: config.buildDirectory,
-        ext: '.js'
+        dest: config.buildDirectory
       },
       release: {
         src: config.sourceFileFilter,
@@ -48,7 +47,7 @@ module.exports = function(grunt) {
       }
     },
 
-    // Lint coffeescript, with the 80l length rule ignored
+    // Lint coffeescript files, with the 80l length rule ignored
     coffeelint: {
       options: {
         'max_line_length': {
@@ -67,7 +66,7 @@ module.exports = function(grunt) {
       }
     },
 
-    // Creates the index page (ie, add js and css links)
+    // Creates the index page (ie, add js and css links in the template)
     index: {
       dev: {
         dir: config.buildDirectory,
@@ -80,7 +79,6 @@ module.exports = function(grunt) {
     },
 
     // Copy libs js/css and our assets over to the build directory
-    // TODO: check if i can improve that part
     copy: {
       libs_js: {
         files: [
@@ -136,6 +134,8 @@ module.exports = function(grunt) {
       }
     },
 
+    // This will concatenate all the .html files in the src folder and
+    // create a js file to be used in an angular app
     html2js: {
       all: {
         options: {
@@ -178,6 +178,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // uglify our app (not vendors js) and adds a banner to it
     uglify: {
       release: {
         options: {
@@ -189,6 +190,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // We only want 1 file for the libs so concatenate all of the minified one
     concat: {
       releaseLibs: {
         src: config.libs.jsMin,
@@ -274,7 +276,7 @@ module.exports = function(grunt) {
     ]
   );
 
-  // Task to run whil developing, will watch over changes and run tests/compile sass/etc
+  // Task to run whil developing, will watch over changes and run tests, compile sass/etc
   grunt.registerTask(
     'dev',
     [
