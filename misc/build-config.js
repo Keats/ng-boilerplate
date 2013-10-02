@@ -64,9 +64,9 @@ var getConfig = function(grunt) {
   config.indexTask.dev = [
     config.libs.js,
     config.libs.css,
+    config.convertedTemplatesPath,
     config.buildDirectory + 'src/**/*.js',
-    config.cssDirectory + '/*.css',
-    config.convertedTemplatesPath
+    config.cssDirectory + '/*.css'
   ];
 
   config.indexTask.release = [

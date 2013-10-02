@@ -136,7 +136,8 @@ module.exports = function(grunt) {
     html2js: {
       all: {
         options: {
-          module: 'templates'
+          module: 'templates',
+          base: 'src/app'
         },
         src: config.templateFileFilter,
         dest: config.convertedTemplatesPath
