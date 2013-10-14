@@ -198,6 +198,10 @@ module.exports = function(grunt) {
 
     // what to do when a file changes
     watch: {
+      options: {
+        livereload: true,
+      },
+
       coffeeSrc: {
         files: config.sourceFileFilter,
         tasks: ['coffeelint:src', 'coffee', 'karma:dev:run']
@@ -205,7 +209,10 @@ module.exports = function(grunt) {
 
       coffeeTests: {
         files: config.testFileFilter,
-        tasks: ['coffeelint:tests', 'karma:dev:run']
+        tasks: ['coffeelint:tests', 'karma:dev:run'],
+        options: {
+          livereload: false
+        }
       },
 
       sass: {
@@ -242,12 +249,17 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('index', 'Process index.html template', function () {
     // This regex will remove the 'root' path when inserting in the template
     var dirRE = new RegExp('^(build|release)\/', 'g');
+
     var jsFiles = filterFor(this.filesSrc, /\.js$/).map(function (file) {
       return file.replace(dirRE, '');
     });
     var cssFiles = filterFor(this.filesSrc, /\.css$/).map(function (file) {
       return file.replace(dirRE, '');
     });
+
+    if (this.target === 'dev') {
+      jsFiles.push('http://localhost:35729/livereload.js');
+    }
 
     grunt.file.copy(config.indexFileFilter, this.data.dir + '/index.html', {
       process: function (contents, path) {
