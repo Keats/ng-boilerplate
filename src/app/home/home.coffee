@@ -9,7 +9,7 @@ angular.module("ngBoilerplate.home", modules).config(['$stateProvider', ($stateP
     views:
       main:
         controller: "HomeCtrl"
-        templateUrl: "home/home.html"
+        templateUrl: "home/index.html"
 
     data:
       pageTitle: "Home"

@@ -37,7 +37,7 @@ var getConfig = function(grunt) {
 	// File filters
 	config.sourceFileFilter = ['src/**/*.coffee', '!src/**/*.tests.coffee'];
 	config.testFileFilter = ['src/**/*.tests.coffee'];
-	config.templateFileFilter = ['src/app/**/*.html', 'src/common/**/*.html'];
+	config.templateFileFilter = ['src/templates/**/*.html', 'src/common/**/*.html'];
 	config.sassFileFilter = [config.sassDirectory + '/**/*.scss'];
 	config.indexFileFilter = ['src/index.html'];
 	config.ownJsToMinifyFilter = [config.buildDirectory + 'src/app/**/*.js', config.convertedTemplatesPath];

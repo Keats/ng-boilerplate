@@ -137,7 +137,7 @@ module.exports = function(grunt) {
       all: {
         options: {
           module: 'templates',
-          base: 'src/app'
+          base: 'src/templates'
         },
         src: config.templateFileFilter,
         dest: config.convertedTemplatesPath

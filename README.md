@@ -18,7 +18,7 @@ The main difference with ngbp is that it is more barebone to fit my own needs :
 
 - SASS with Foundation
 - dev/release grunt tasks
-- neat code organization (this uses the same layout as ngbp, except that the sass files are in a separate folder)
+- neat code organization (this uses the same layout as ngbp, except that the sass files and templates are in their own folder)
 
 The main difference when it comes to code is that I am not using ngMin and therefore need to inline the injection of modules.
 
@@ -48,9 +48,6 @@ ng-boilerplate/
 See this awesome discussion to understand the structure : https://github.com/yeoman/generator-angular/issues/109  
 The basic idea is that you create a folder for each feature in src/app and put your code/html in it (look at the home directory for an example).
 
-Still not convinced of having templates in every folder instead of having a templates folder at the same level as the style one, 
-might change that soon.
-
 ## Tasks
 There are grunt 4 tasks :
 
@@ -61,4 +58,3 @@ There are grunt 4 tasks :
 
 ## TODO
 Add common directory to the build
-Maybe create a templates directory
