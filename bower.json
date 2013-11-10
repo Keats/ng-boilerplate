@@ -2,14 +2,10 @@
   "name": "ngBoilerplate",
   "version": "0.0.0",
   "devDependencies": {
-    "angular": "1.2.0-rc.2",
+    "angular": "1.2.0",
     "angular-ui-router": "~0.2.0",
     "angular-ui-utils": "~0.0.4",
     "chai": "~1.8.0",
-    "angular-mocks": "1.2.0-rc.2"
-  },
-  "resolutions": {
-    "angular": "1.2.0-rc.2",
-    "angular-mocks": "1.2.0-rc.2"
+    "angular-mocks": "1.2.0"
   }
 }
