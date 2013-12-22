@@ -3,7 +3,9 @@ modules = [
   'ui.router.state',
 ]
 
-angular.module("ngBoilerplate.home", modules).config(['$stateProvider', ($stateProvider) ->
+home = angular.module 'ngBoilerplate.home', modules
+
+home.config ['$stateProvider', ($stateProvider) ->
   $stateProvider.state "home",
     url: "/home"
     views:
@@ -13,6 +15,7 @@ angular.module("ngBoilerplate.home", modules).config(['$stateProvider', ($stateP
 
     data:
       pageTitle: "Home"
+]
 
-]).controller "HomeCtrl", ['$scope', ($scope) ->
+home.controller "HomeCtrl", ['$scope', ($scope) ->
 ]
