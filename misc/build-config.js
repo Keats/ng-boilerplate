@@ -5,11 +5,11 @@
 var getConfig = function(grunt) {
 
 	// Getting some info from package.json
-	var pkg = grunt.file.readJSON("package.json");
-	var config = {};
+  var pkg = grunt.file.readJSON("package.json");
+  var config = {};
 
-	// META INFO ---------------------------------------------------------------
-	config.banner = '/**\n' +
+  // META INFO ---------------------------------------------------------------
+  config.banner = '/**\n' +
   ' * ' + pkg.name + ' - v' + pkg.version + ' - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
   ' * By ' + pkg.author + '\n' +
   ' */\n';
@@ -18,10 +18,10 @@ var getConfig = function(grunt) {
   // BUILD INFO --------------------------------------------------------------
 
   //Directories
-	config.buildDirectory = 'build/';
-	config.releaseDirectory = 'release/';
-	config.miscDirectory = 'misc/';
-	config.assetsDirectory = 'src/assets/';
+  config.buildDirectory = 'build/';
+  config.releaseDirectory = 'release/';
+  config.miscDirectory = 'misc/';
+  config.assetsDirectory = 'src/assets/';
 
   // Output paths
   config.convertedTemplatesPath = config.buildDirectory + 'templates.js';
@@ -29,24 +29,24 @@ var getConfig = function(grunt) {
   config.releaseAppMinPath = config.releaseDirectory + 'scripts/app.js';
   config.releaseCssPath = config.releaseDirectory + 'style/app.css';
 
-	// Compass setup
-	config.sassDirectory = 'src/style';
-	config.cssDirectory = config.buildDirectory + 'style';
-	config.compassConfigFile = config.miscDirectory + 'compass.rb';
+  // Compass setup
+  config.sassDirectory = 'src/style';
+  config.cssDirectory = config.buildDirectory + 'style';
+  config.compassConfigFile = config.miscDirectory + 'compass.rb';
 
-	// File filters
-	config.sourceFileFilter = ['src/**/*.coffee', '!src/**/*.tests.coffee'];
-	config.testFileFilter = ['src/**/*.tests.coffee'];
-	config.templateFileFilter = ['src/templates/**/*.html', 'src/common/**/*.html'];
-	config.sassFileFilter = [config.sassDirectory + '/**/*.scss'];
-	config.indexFileFilter = ['src/index.html'];
-	config.ownJsToMinifyFilter = [config.buildDirectory + 'src/app/**/*.js', config.convertedTemplatesPath];
-	config.assetsFilter = ['src/assets/**'];
-	config.cssFilter = [config.cssDirectory + '/**'];
+  // File filters
+  config.sourceFileFilter = ['src/**/*.coffee', '!src/**/*.tests.coffee'];
+  config.testFileFilter = ['src/**/*.tests.coffee'];
+  config.templateFileFilter = ['src/templates/**/*.html', 'src/common/**/*.html'];
+  config.sassFileFilter = [config.sassDirectory + '/**/*.scss'];
+  config.indexFileFilter = ['src/index.html'];
+  config.ownJsToMinifyFilter = [config.buildDirectory + 'src/app/**/*.js', config.convertedTemplatesPath];
+  config.assetsFilter = ['src/assets/**'];
+  config.cssFilter = [config.cssDirectory + '/**'];
 
   // Path to 3rd party js (both normal and minified)/css (installed via bower)
   config.libs = {
-		js: [
+    js: [
       'libs/angular/angular.js',
       'libs/angular-ui-router/release/angular-ui-router.js',
     ],
@@ -70,7 +70,7 @@ var getConfig = function(grunt) {
   ];
 
   config.indexTask.release = [
-		config.releaseLibsMinPath,
+    config.releaseLibsMinPath,
     config.releaseAppMinPath,
     config.releaseCssPath
   ];
