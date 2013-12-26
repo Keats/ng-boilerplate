@@ -299,7 +299,7 @@ module.exports = function(grunt) {
   );
 
   // Alias to run the full test suite
-  grunt.registerTask('test', ['karma:complete']);
+  grunt.registerTask('test', ['html2js', 'karma:complete']);
 
   // This will create a release folder, containing the app ready to be deployed
   grunt.registerTask(
