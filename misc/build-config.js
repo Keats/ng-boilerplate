@@ -85,6 +85,7 @@ var getConfig = function(grunt) {
     config.convertedTemplatesPath,
     'libs/chai/chai.js',
     config.miscDirectory + 'chai-asserts.js',
+    'libs/sinonjs/sinon.js',
     'libs/angular-mocks/angular-mocks.js',
     config.sourceFileFilter[0],
     config.testFileFilter[0]
