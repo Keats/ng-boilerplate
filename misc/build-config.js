@@ -40,7 +40,10 @@ var getConfig = function(grunt) {
   config.templateFileFilter = ['src/templates/**/*.html', 'src/common/**/*.html'];
   config.sassFileFilter = [config.sassDirectory + '/**/*.scss'];
   config.indexFileFilter = ['src/index.html'];
-  config.ownJsToMinifyFilter = [config.buildDirectory + 'src/app/**/*.js', config.convertedTemplatesPath];
+  config.ownJsToMinifyFilter = [
+    config.buildDirectory + 'src/**/*.js',
+    config.convertedTemplatesPath
+  ];
   config.assetsFilter = ['src/assets/**'];
   config.cssFilter = [config.cssDirectory + '/**'];
 
