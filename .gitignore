@@ -2,4 +2,3 @@ build/
 libs/
 node_modules/
 .sass-cache/
-release/
