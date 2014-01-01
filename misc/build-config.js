@@ -4,15 +4,15 @@
 // only focus on the tasks
 var getConfig = function(grunt) {
 
-	// Getting some info from package.json
+  // Getting some info from package.json
   var pkg = grunt.file.readJSON("package.json");
   var config = {};
 
   // META INFO ---------------------------------------------------------------
   config.banner = '/**\n' +
-  ' * ' + pkg.name + ' - v' + pkg.version + ' - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-  ' * By ' + pkg.author + '\n' +
-  ' */\n';
+      ' * ' + pkg.name + ' - v' + pkg.version + ' - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+      ' * By ' + pkg.author + '\n' +
+      ' */\n';
 
 
   // BUILD INFO --------------------------------------------------------------
@@ -30,9 +30,9 @@ var getConfig = function(grunt) {
   config.releaseCssPath = config.releaseDirectory + 'style/app.css';
 
   // Compass setup
-  config.sassDirectory = 'src/style';
+  config.sassDirectory = 'src/style/';
+  config.sassMainFile = config.sassDirectory + 'app.scss';
   config.cssDirectory = config.buildDirectory + 'style';
-  config.compassConfigFile = config.miscDirectory + 'compass.rb';
 
   // File filters
   config.sourceFileFilter = ['src/**/*.coffee', '!src/**/*.tests.coffee'];

@@ -3,7 +3,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-coffee');
-  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -11,6 +10,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-sass');
 
   var config = require('./misc/build-config.js')(grunt);
 
@@ -21,15 +21,13 @@ module.exports = function(grunt) {
       release: config.releaseDirectory
     },
 
-    // Build the foundation + custom files using compass
-    compass: {
-      main: {
+    sass: {
+      dist: {
         options: {
-          config: config.compassConfigFile,
-          cssDir: config.cssDirectory,
-          sassDir: config.sassDirectory,
-          force: true,
-          environment: 'production'
+          outputStyle: 'compressed'
+        },
+        files : {
+          'build/style/app.css': config.sassMainFile
         }
       }
     },
@@ -199,7 +197,7 @@ module.exports = function(grunt) {
     // what to do when a file changes
     watch: {
       options: {
-        livereload: true,
+        livereload: true
       },
 
       coffeeSrc: {
@@ -217,7 +215,7 @@ module.exports = function(grunt) {
 
       sass: {
         files: config.sassFileFilter,
-        tasks: ['compass:main']
+        tasks: ['sass:dist']
       },
 
       templates: {
@@ -275,27 +273,28 @@ module.exports = function(grunt) {
 
   // Builds the app without running the test, used in other tasks
   grunt.registerTask(
-    'build',
-    [
-      'html2js',
-      'compass',
-      'coffeelint:src',
-      'coffee',
-      'copy:libsJs',
-      'copy:libsCss',
-      'copy:assets',
-      'index:dev'
-    ]
+      'build',
+      [
+        'html2js',
+        'sass',
+        'coffeelint:src',
+        'coffee',
+        'copy:libsJs',
+        'copy:libsCss',
+        'copy:assets',
+        'index:dev'
+      ]
   );
 
   // Task to run whil developing, will watch over changes and run tests, compile sass/etc
   grunt.registerTask(
-    'dev',
-    [
-      'karma:dev', // starts the karma server and browser
-      'build',
-      'watch'
-    ]
+      'dev',
+      [
+        'clean',
+        'karma:dev', // starts the karma server and browser
+        'build',
+        'watch'
+      ]
   );
 
   // Alias to run the full test suite
@@ -303,17 +302,17 @@ module.exports = function(grunt) {
 
   // This will create a release folder, containing the app ready to be deployed
   grunt.registerTask(
-    'release',
-    [
-      'clean',
-      'build',
-      'uglify',
-      'concat',
-      'copy:releaseAssets',
-      'copy:releaseCss',
-      'index:release',
-      'clean:build'
-    ]
+      'release',
+      [
+        'clean',
+        'build',
+        'uglify',
+        'concat',
+        'copy:releaseAssets',
+        'copy:releaseCss',
+        'index:release',
+        'clean:build'
+      ]
   );
 
 };

@@ -1,0 +1,3 @@
+[submodule "src/style/snowflake"]
+	path = src/style/snowflake
+	url = https://github.com/Keats/snowflake.git
