@@ -5,7 +5,7 @@ modules = [
 
 home = angular.module 'ngBoilerplate.home', modules
 
-home.config ['$stateProvider', ($stateProvider) ->
+homeConfig = ($stateProvider) ->
   $stateProvider.state "home",
     url: "/home"
     views:
@@ -15,7 +15,13 @@ home.config ['$stateProvider', ($stateProvider) ->
 
     data:
       pageTitle: "Home"
-]
 
-home.controller "HomeCtrl", ['$scope', ($scope) ->
-]
+homeConfig.$inject = ['$stateProvider']
+home.config homeConfig
+
+
+homeController = ($scope) ->
+  # nothing in the example
+
+homeController.$inject = ['$scope']
+home.controller 'HomeCtrl', homeController
