@@ -2,11 +2,10 @@
   "name": "ngBoilerplate",
   "version": "0.0.0",
   "devDependencies": {
-    "angular": "1.2.6",
-    "angular-ui-router": "~0.2.0",
-    "angular-ui-utils": "~0.0.4",
-    "chai": "~1.8.0",
-    "angular-mocks": "1.2.6",
+    "angular": "1.2.13",
+    "angular-mocks": "1.2.13",
+    "angular-ui-router": "0.2.8",
+    "chai": "~1.9.0",
     "sinonjs": "~1.7.3"
   }
 }
