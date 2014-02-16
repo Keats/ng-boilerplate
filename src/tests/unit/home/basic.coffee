@@ -1,6 +1,6 @@
-describe 'AppCtrl', ->
+describe 'Unit: Home module', ->
 
-  beforeEach module("ngBoilerplate")
+  beforeEach module('ngBoilerplate.home')
 
-  it "should have a dummy test", ->
+  it 'should have a dummy test', ->
     expect(true).to.be.true
