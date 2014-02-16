@@ -1,4 +1,5 @@
 # ng-boilerplate
+[![Build Status](https://drone.io/github.com/Keats/ng-boilerplate/status.png)](https://drone.io/github.com/Keats/ng-boilerplate/latest)
 
 ## Install
 ```bash
