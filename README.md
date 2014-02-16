@@ -5,7 +5,12 @@
 ```bash
 $ git clone git://github.com/Keats/ng-boilerplate myproject
 $ cd myproject
-$ rm -rf .git/
+$ git checkout --orphan temp
+$ git commit 'initial commit'
+$ git branch -D master
+$ git branch -m master
+$ git remote remove origin
+$ git remote add origin yourgitrepourl.git
 $ git submodule init
 $ git submodule update
 $ sudo npm -g install gulp
