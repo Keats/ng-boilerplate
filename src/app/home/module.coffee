@@ -19,9 +19,10 @@ homeConfig = ($stateProvider) ->
 homeConfig.$inject = ['$stateProvider']
 home.config homeConfig
 
+class HomeCtrl
+  @$inject = ['$scope']
 
-homeController = ($scope) ->
-  # nothing in the example
+  constructor: (@scope) ->
+    console.log 'hello'
 
-homeController.$inject = ['$scope']
-home.controller 'HomeCtrl', homeController
+home.controller 'HomeCtrl', HomeCtrl

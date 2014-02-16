@@ -7,7 +7,7 @@ modules = [
   'ui.router.state'
 ]
 
-appModule = angular.module('ngBoilerplate', modules)
+appModule = angular.module 'ngBoilerplate', modules
 
 
 appConfig = ($stateProvider, $urlRouterProvider) ->
