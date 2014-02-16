@@ -28,7 +28,7 @@ sources =
   coffee: 'src/**/*coffee'
   app: ['src/**/*.coffee', '!src/**/*.tests.coffee']
   tests: 'src/**/*.tests.coffee'
-  templates: 'src/templates/**/*.html'
+  templates: 'src/**/*.html'
   index: 'src/index.html'
 
 distFolderName = if isDist then 'dist' else 'build'
@@ -96,7 +96,11 @@ gulp.task 'scripts', ->
 # Transforms the templates to js using html2js to a single file and minify it
 gulp.task 'templates', ->
   gulp.src(sources.templates)
-  .pipe(minifyHTML())
+  .pipe(minifyHTML(
+      empty: true
+      spare: true
+      quotes: true
+  ))
   .pipe(html2js({moduleName: 'templates'}))
   .pipe(concat('templates.js'))
   .pipe(if isDist then uglify() else gutil.noop())
