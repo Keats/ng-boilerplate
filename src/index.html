@@ -2,17 +2,11 @@
 <html ng-app="ngBoilerplate" ng-controller="AppCtrl">
   <head>
     <title ng-bind="pageTitle"></title>
+    <!-- inject:css -->
+    <!-- endinject -->
 
-    <!-- compiled CSS -->
-    <% styles.forEach( function ( file ) { %>
-      <link rel="stylesheet" type="text/css" href="<%= file %>" />
-    <% }); %>
-
-    <!-- compiled JavaScript -->
-    <% scripts.forEach( function ( file ) { %>
-      <script type="text/javascript" src="<%= file %>"></script>
-    <% }); %>
-
+    <!-- inject:js -->
+    <!-- endinject -->
   </head>
 
   <body>

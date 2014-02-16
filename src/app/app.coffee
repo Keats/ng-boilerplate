@@ -18,7 +18,8 @@ appModule.config appConfig
 
 
 appController = ($scope, $location) ->
-  $scope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
+  $scope.$on '$stateChangeSuccess',
+  (event, toState, toParams, fromState, fromParams) ->
     if angular.isDefined(toState.data.pageTitle)
       $scope.pageTitle = toState.data.pageTitle + ' | ngBoilerplate'
 
