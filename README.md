@@ -3,14 +3,15 @@
 
 ## Install
 ```bash
-$ git clone git://github.com/Keats/ng-boilerplate
-$ cd ng-boilerplate
+$ git clone git://github.com/Keats/ng-boilerplate myproject
+$ cd myproject
+$ rm -rf .git/
 $ git submodule init
 $ git submodule update
-$ sudo npm -g install grunt-cli bower
+$ sudo npm -g install gulp
 $ npm install
 $ bower install
-$ grunt dev
+$ gulp --require coffee-script/register
 ```
 
 ## Goal
@@ -19,10 +20,8 @@ to work for *me*, not supposed to be generic.
 The main difference with ngbp is that it is more barebone to fit my own needs :
 
 - SASS using snowflake https://github.com/Keats/snowflake (Bourbon + Neat + some parts of Foundation 5)
-- dev/release grunt tasks
-- neat code organization (this uses the same layout as ngbp, except that the sass files and templates are in their own folder)
-
-The main difference when it comes to code is that I am not using ngMin and therefore do DI a bit differently (look at app.coffee to see an example).
+- using gulp instead of grunt
+- neat code organization by feature
 
 ## Structure
 
@@ -43,8 +42,7 @@ ng-boilerplate/
   |- .bowerrc
   |- .gitignore
   |- bower.json
-  |- build.config.js
-  |- Gruntfile.js
+  |- gulpfile.coffee
   |- package.json
 ```
 See this awesome discussion to understand the structure : https://github.com/yeoman/generator-angular/issues/109
@@ -52,9 +50,15 @@ The basic idea is that you create a folder for each feature in src/app, making f
 I also put tests into their own folders in a feature directory with an extensions of .tests.coffee.
 
 ## Tasks
-There are 4 grunt tasks :
+This uses gulp (http://gulpjs.com/) so you can call any of the tasks defined in the gulpfile.
+The default one watches over the files and runs the associated tasks when needed and is called like this:
+```bash
+$ gulp --require coffee-script/register
+```
 
-- build: one off dev build
-- dev: continuous build process, automatically run tests on code change, compile compass, concatenates templates
-- test: run the whole test suite
-- release: create a release directory containing the files ready to deploy
+To build the version to distribute, run the following:
+```bash
+$ gulp build --require coffee-script/register --type dist
+```
+
+
