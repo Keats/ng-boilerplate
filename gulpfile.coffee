@@ -16,7 +16,6 @@ runSequence = require 'run-sequence'
 debug = require 'gulp-debug'
 karma = require 'gulp-karma'
 
-
 # CONFIG -------------------------------------------
 
 # Pass the env by using: gulp --type ENV_NAME
@@ -27,8 +26,7 @@ sources =
   sass: 'src/style/*.scss'
   coffee: 'src/**/*coffee'
   app: ['src/**/*.coffee', '!src/**/*.tests.coffee']
-  tests: 'src/**/*.tests.coffee'
-  templates: 'src/**/*.html'
+  templates: 'src/templates/**/*.html'
   index: 'src/index.html'
 
 distFolderName = if isDist then 'dist' else 'build'
@@ -55,7 +53,8 @@ testFiles = libs.dev;
 testFiles = testFiles.concat [
   'libs/angular-mocks/angular-mocks.js',
   'build/src/templates.js',
-  'src/**/*.coffee'
+  'src/**/*.coffee',
+  '!src/tests/integration/**/*.coffee'
 ]
 
 # JS/CSS to inject in index.html
@@ -117,8 +116,9 @@ gulp.task 'index', ->
   .pipe(inject(sources.index, {ignorePath: distFolderName, addRootSlash: false}))
   .pipe(gulp.dest(destinations.index))
 
+
 # Run tests only once with karma
-gulp.task 'test', ->
+gulp.task 'karma', ->
   gulp.src(testFiles)
   .pipe(karma(
     configFile: 'karma.conf.coffee'
@@ -129,9 +129,9 @@ gulp.task 'test', ->
 gulp.task 'test-continuous', ->
   gulp.src(testFiles)
   .pipe(karma(
-      configFile: 'karma.conf.coffee'
-      action: 'watch'
-    ))
+    configFile: 'karma.conf.coffee'
+    action: 'watch'
+  ))
 
 # Delets build/ and dist/
 gulp.task 'clean', ->

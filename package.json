@@ -34,6 +34,8 @@
     "gulp-clean": "~0.2.4",
     "run-sequence": "~0.3.5",
     "gulp-debug": "~0.2.0",
-    "gulp-karma": "0.0.2"
+    "gulp-karma": "0.0.2",
+    "protractor": "~0.18.1",
+    "chai-as-promised": "~4.1.0"
   }
 }
