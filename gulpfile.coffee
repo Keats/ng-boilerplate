@@ -142,8 +142,7 @@ gulp.task 'protractor', ->
   .pipe(protractor(configFile: 'protractor.conf.js'))
   .on 'error', (e) -> throw e
 
-gulp.task 'ci', ->
-  runSequence 'build', ['karma', 'protractor']
+gulp.task 'ci', ['karma', 'protractor']
 
 # Deletes build/ and dist/
 gulp.task 'clean', ->

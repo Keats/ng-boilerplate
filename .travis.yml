@@ -6,11 +6,12 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
   - git submodule init
   - git submodule update
-  - cd build && python -m SimpleHTTPServer 8001 &
 install:
   - npm install -g bower gulp
   - npm install
   - bower install
   - ./node_modules/protractor/bin/webdriver-manager update
+  - gulp build --require coffee-script/register
+  - cd build && python -m SimpleHTTPServer 8001 &
 script:
   - gulp ci --require coffee-script/register
