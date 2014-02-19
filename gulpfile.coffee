@@ -126,6 +126,7 @@ gulp.task 'karma', ->
     configFile: 'karma.conf.coffee'
     action: 'run'
   ))
+  # TODO: handle errors (ie tests failed) when it's merged in gulp-karma
 
 # Run karma and tell it to run the tests on filechanges
 gulp.task 'test-continuous', ->
@@ -139,6 +140,7 @@ gulp.task 'test-continuous', ->
 gulp.task 'protractor', ->
   gulp.src(sources.integration)
   .pipe(protractor(configFile: 'protractor.conf.js'))
+  .on 'error', (e) -> throw e
 
 gulp.task 'ci', ->
   runSequence 'build', ['karma', 'protractor']
