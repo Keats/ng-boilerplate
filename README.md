@@ -1,5 +1,6 @@
 # ng-boilerplate
-[![Build Status](https://drone.io/github.com/Keats/ng-boilerplate/status.png)](https://drone.io/github.com/Keats/ng-boilerplate/latest)
+[![Build Status](https://travis-ci.org/Keats/ng-boilerplate.png?branch=master)](https://travis-ci.org/Keats/ng-boilerplate)
+![Dependencies Status](https://david-dm.org/Keats/ng-boilerplate.png)
 
 ## Install
 ```bash
