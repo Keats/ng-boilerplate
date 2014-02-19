@@ -30,13 +30,16 @@ sources =
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
   integration: 'src/tests/integration/**/*.coffee'
+  assets: ['src/assets/**/*.png', 'src/assets/**/*.jpg']
 
 distFolderName = if isDist then 'dist' else 'build'
 destinations =
   css: "#{ distFolderName }/style"
+  assets: "#{ distFolderName }/assets"
   js: "#{ distFolderName }/src"
   libs: "#{ distFolderName }/libs"
   index: "#{ distFolderName }"
+
 
 # 3rd party libs, needs to be updated everytime we add a lib
 libs =
@@ -112,6 +115,11 @@ gulp.task 'libs', ->
   gulp.src(if isDist then libs.dist else libs.dev)
   .pipe(gulp.dest(destinations.libs))
 
+# Copy .png and .jpg only for now
+gulp.task 'assets', ->
+  gulp.src(sources.assets)
+  .pipe(gulp.dest(destinations.assets))
+
 # Injects js/css tags into index.html
 gulp.task 'index', ->
   gulp.src(injectPaths, {read: false})
@@ -155,7 +163,7 @@ gulp.task 'default', ->
 
 # Build the project
 gulp.task 'build', ->
-  runSequence 'clean', ['style', 'lint', 'scripts', 'templates', 'libs'], 'index'
+  runSequence 'clean', ['style', 'assets', 'lint', 'scripts', 'templates', 'libs'], 'index'
 
 # Setup watchers for the different files
 gulp.task 'watch', ->
@@ -163,3 +171,4 @@ gulp.task 'watch', ->
   gulp.watch sources.app, ['lint', 'scripts', 'index']
   gulp.watch sources.templates, ['templates']
   gulp.watch sources.index, ['index']
+  gulp.watch sources.assets, ['assets']
