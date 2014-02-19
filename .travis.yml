@@ -12,6 +12,6 @@ install:
   - bower install
   - ./node_modules/protractor/bin/webdriver-manager update
   - gulp build --require coffee-script/register
-  - cd build && python -m SimpleHTTPServer 8001 &
+  - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 & 
 script:
   - gulp ci --require coffee-script/register
