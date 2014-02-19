@@ -1,7 +1,8 @@
 require('coffee-script').register();
 
 exports.config = {
-  seleniumAddress: 'http://localhost:4444/wd/hub',
+  // The file path to the selenium server jar.
+  seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.39.0.jar',
   chromeOnly: false,
   capabilities: {
     browserName: 'firefox'

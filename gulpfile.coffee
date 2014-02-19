@@ -15,11 +15,12 @@ clean = require 'gulp-clean'
 runSequence = require 'run-sequence'
 debug = require 'gulp-debug'
 karma = require 'gulp-karma'
+protractor = require('gulp-protractor').protractor
 
 # CONFIG -------------------------------------------
 
 # Pass the env by using: gulp --type ENV_NAME
-isDist = gutil.env.type is 'dist';
+isDist = gutil.env.type is 'dist'
 
 # File sources, both origin and destinations
 sources =
@@ -28,6 +29,7 @@ sources =
   app: ['src/**/*.coffee', '!src/**/*.tests.coffee']
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
+  integration: 'src/tests/integration/**/*.coffee'
 
 distFolderName = if isDist then 'dist' else 'build'
 destinations =
@@ -133,7 +135,15 @@ gulp.task 'test-continuous', ->
     action: 'watch'
   ))
 
-# Delets build/ and dist/
+# Setting up the test task
+gulp.task 'protractor', ->
+  gulp.src(sources.integration)
+  .pipe(protractor(configFile: 'protractor.conf.js'))
+
+gulp.task 'ci', ->
+  runSequence 'build', ['karma', 'protractor']
+
+# Deletes build/ and dist/
 gulp.task 'clean', ->
   gulp.src(['dist/', 'build/'], {read: false}).pipe(clean())
 
