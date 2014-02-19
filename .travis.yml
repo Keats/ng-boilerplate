@@ -6,9 +6,10 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
   - git submodule init
   - git submodule update
+  - cd build && python -m SimpleHTTPServer 8001 &
 install:
-  - npm install -g bower gulp --quiet
-  - npm install --quiet
+  - npm install -g bower gulp
+  - npm install
   - bower install
   - ./node_modules/protractor/bin/webdriver-manager update
 script:
