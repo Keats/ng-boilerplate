@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "0.10"
+install:
+  - npm install -g bower gulp --quiet
+  - npm install --quiet
+  - ./node_modules/protractor/bin/webdriver-manager update
+script:
+  - gulp ci --require coffee-script/register
