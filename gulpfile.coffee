@@ -16,6 +16,7 @@ runSequence = require 'run-sequence'
 debug = require 'gulp-debug'
 karma = require 'gulp-karma'
 protractor = require('gulp-protractor').protractor
+connect = require 'gulp-connect'
 
 # CONFIG -------------------------------------------
 
@@ -73,11 +74,21 @@ injectPaths = [
 
 # TASKS ----------------------------------------------------------------------
 
+# Allows to autoreload the page
+gulp.task 'connect', connect.server(
+  root: ['build'] # this is the directory the server will run
+  port: 1337
+  livereload: true
+  open:
+    browser: 'chromium-browser' # change that to the browser you're using
+)
+
 # Compiles SASS with libsass to a compressed output
 gulp.task 'style', ->
   gulp.src(sources.sass)
   .pipe(sass({outputStyle: 'compressed'}))
   .pipe(gulp.dest(destinations.css))
+  .pipe(connect.reload())
 
 # Checks that the coffeescript code passes linting
 gulp.task 'lint', ->
@@ -95,7 +106,7 @@ gulp.task 'scripts', ->
   if isDist
     stream = stream.pipe(concat('app.js')).pipe(uglify())
 
-  stream.pipe(gulp.dest(destinations.js))
+  stream.pipe(gulp.dest(destinations.js)).pipe(connect.reload())
 
 # Transforms the templates to js using html2js to a single file and minify it
 gulp.task 'templates', ->
@@ -109,6 +120,7 @@ gulp.task 'templates', ->
   .pipe(concat('templates.js'))
   .pipe(if isDist then uglify() else gutil.noop())
   .pipe(gulp.dest(destinations.js))
+  .pipe(connect.reload())
 
 # Copy the 3rd party libs over
 gulp.task 'libs', ->
@@ -119,13 +131,14 @@ gulp.task 'libs', ->
 gulp.task 'assets', ->
   gulp.src(sources.assets)
   .pipe(gulp.dest(destinations.assets))
+  .pipe(connect.reload())
 
 # Injects js/css tags into index.html
 gulp.task 'index', ->
   gulp.src(injectPaths, {read: false})
   .pipe(inject(sources.index, {ignorePath: distFolderName, addRootSlash: false}))
   .pipe(gulp.dest(destinations.index))
-
+  .pipe(connect.reload())
 
 # Run tests only once with karma
 gulp.task 'karma', ->
@@ -159,7 +172,7 @@ gulp.task 'clean', ->
 # By default, we first want to build the project, then start karma runner and
 # the watchers
 gulp.task 'default', ->
-  runSequence 'build', ['test-continuous', 'watch']
+  runSequence 'build', ['connect', 'test-continuous', 'watch']
 
 # Build the project
 gulp.task 'build', ->

@@ -37,6 +37,7 @@
     "gulp-karma": "0.0.2",
     "protractor": "~0.18.1",
     "chai-as-promised": "~4.1.0",
-    "gulp-protractor": "0.0.4"
+    "gulp-protractor": "0.0.4",
+    "gulp-connect": "^1.0.0"
   }
 }
