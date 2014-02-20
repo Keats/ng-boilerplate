@@ -80,8 +80,6 @@ gulp.task 'connect', connect.server(
   root: ['build'] # this is the directory the server will run
   port: 1337
   livereload: true
-  open:
-    browser: 'chromium-browser' # change that to the browser you're using
 )
 
 # Compiles SASS with libsass to a compressed output
