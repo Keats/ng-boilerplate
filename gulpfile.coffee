@@ -66,6 +66,7 @@ testFiles = testFiles.concat [
 # JS/CSS to inject in index.html
 # Order is important when injecting them into index.html
 injectPaths = [
+  sources.index
   "#{ destinations.libs }/angular.#{ if isDist then 'min.' else '' }js"
   "#{ destinations.libs }/angular-ui-router.#{ if isDist then 'min.' else '' }js"
   "#{ destinations.js }/**/*.js"
