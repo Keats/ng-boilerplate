@@ -16,6 +16,7 @@ runSequence = require 'run-sequence'
 debug = require 'gulp-debug'
 karma = require 'gulp-karma'
 protractor = require('gulp-protractor').protractor
+browserSync = require 'browser-sync'
 connect = require 'gulp-connect'
 
 # CONFIG -------------------------------------------
@@ -66,7 +67,6 @@ testFiles = testFiles.concat [
 # JS/CSS to inject in index.html
 # Order is important when injecting them into index.html
 injectPaths = [
-  sources.index
   "#{ destinations.libs }/angular.#{ if isDist then 'min.' else '' }js"
   "#{ destinations.libs }/angular-ui-router.#{ if isDist then 'min.' else '' }js"
   "#{ destinations.js }/**/*.js"
@@ -87,7 +87,6 @@ gulp.task 'style', ->
   gulp.src(sources.sass)
   .pipe(sass({outputStyle: 'compressed'}))
   .pipe(gulp.dest(destinations.css))
-  .pipe(connect.reload())
 
 # Checks that the coffeescript code passes linting
 gulp.task 'lint', ->
@@ -105,7 +104,7 @@ gulp.task 'scripts', ->
   if isDist
     stream = stream.pipe(concat('app.js')).pipe(uglify())
 
-  stream.pipe(gulp.dest(destinations.js)).pipe(connect.reload())
+  stream.pipe(gulp.dest(destinations.js))
 
 # Transforms the templates to js using html2js to a single file and minify it
 gulp.task 'templates', ->
@@ -119,7 +118,6 @@ gulp.task 'templates', ->
   .pipe(concat('templates.js'))
   .pipe(if isDist then uglify() else gutil.noop())
   .pipe(gulp.dest(destinations.js))
-  .pipe(connect.reload())
 
 # Copy the 3rd party libs over
 gulp.task 'libs', ->
@@ -130,14 +128,12 @@ gulp.task 'libs', ->
 gulp.task 'assets', ->
   gulp.src(sources.assets)
   .pipe(gulp.dest(destinations.assets))
-  .pipe(connect.reload())
 
 # Injects js/css tags into index.html
 gulp.task 'index', ->
   gulp.src(injectPaths, {read: false})
   .pipe(inject(sources.index, {ignorePath: distFolderName, addRootSlash: false}))
   .pipe(gulp.dest(destinations.index))
-  .pipe(connect.reload())
 
 # Run tests only once with karma
 gulp.task 'karma', ->
@@ -168,10 +164,20 @@ gulp.task 'ci', ['karma', 'protractor']
 gulp.task 'clean', ->
   gulp.src(['dist/', 'build/'], {read: false}).pipe(clean())
 
+# Reloads the page for us
+gulp.task 'browser-sync', ->
+  browserSync.init [
+    'build/*.html'
+    'build/**/*.js'
+    'build/style/*.css'
+    ],
+    server:
+      baseDir: 'build'
+
 # By default, we first want to build the project, then start karma runner and
 # the watchers
-gulp.task 'default', ->
-  runSequence 'build', ['connect', 'test-continuous', 'watch']
+gulp.task 'default', ['build'], ->
+  runSequence 'browser-sync', ['test-continuous', 'watch']
 
 # Build the project
 gulp.task 'build', ->
