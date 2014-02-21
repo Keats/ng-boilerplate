@@ -164,7 +164,7 @@ gulp.task 'browser-sync', ->
     'build/style/*.css'
     ],
     server:
-      baseDir: 'build'
+      baseDir: './build'
 
 # By default, we first want to build the project, then start karma runner and
 # the watchers
