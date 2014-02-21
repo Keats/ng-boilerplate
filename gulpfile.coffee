@@ -17,7 +17,6 @@ debug = require 'gulp-debug'
 karma = require 'gulp-karma'
 protractor = require('gulp-protractor').protractor
 browserSync = require 'browser-sync'
-connect = require 'gulp-connect'
 
 # CONFIG -------------------------------------------
 
@@ -74,13 +73,6 @@ injectPaths = [
 ]
 
 # TASKS ----------------------------------------------------------------------
-
-# Allows to autoreload the page
-gulp.task 'connect', connect.server(
-  root: ['build'] # this is the directory the server will run
-  port: 1337
-  livereload: true
-)
 
 # Compiles SASS with libsass to a compressed output
 gulp.task 'style', ->
