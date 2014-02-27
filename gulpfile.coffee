@@ -25,8 +25,8 @@ isDist = gutil.env.type is 'dist'
 
 # File sources, both origin and destinations
 sources =
-  sass: 'src/style/*.scss'
-  coffee: 'src/**/*coffee'
+  sass: 'src/style/**/*.scss'
+  coffee: 'src/**/*.coffee'
   app: ['src/**/*.coffee', '!src/**/*.tests.coffee']
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
