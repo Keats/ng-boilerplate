@@ -9,3 +9,13 @@ module.exports = (config) ->
       'karma-phantomjs-launcher',
       'karma-chai-sinon'
     ]
+    files: [
+      'libs/angular/angular.js',
+      'libs/angular-ui-router/release/angular-ui-router.js',
+      'libs/angular-mocks/angular-mocks.js',
+      'build/src/templates.js',
+      'src/**/*.coffee',
+    ]
+    exclude: [
+      'src/tests/integration/**/*.coffee'
+    ]
