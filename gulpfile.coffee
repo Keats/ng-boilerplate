@@ -2,19 +2,10 @@
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 
-sass = require 'gulp-sass'
-coffeelint = require 'gulp-coffeelint'
-coffee = require 'gulp-coffee'
-concat = require 'gulp-concat'
-rename = require 'gulp-rename'
-uglify = require 'gulp-uglify'
-html2js = require 'gulp-ng-html2js'
-minifyHTML = require 'gulp-minify-html'
-inject = require 'gulp-inject'
-clean = require 'gulp-clean'
+# Load plugins automatically from package.jso
+# Access them using $.pluginName
+$ = require('gulp-load-plugins')()
 runSequence = require 'run-sequence'
-debug = require 'gulp-debug'
-karma = require 'gulp-karma'
 protractor = require('gulp-protractor').protractor
 browserSync = require 'browser-sync'
 
@@ -77,38 +68,38 @@ injectPaths = [
 # Compiles SASS with libsass to a compressed output
 gulp.task 'style', ->
   gulp.src(sources.sass)
-  .pipe(sass({outputStyle: 'compressed', errLogToConsole: true}))
+  .pipe($.sass({outputStyle: 'compressed', errLogToConsole: true}))
   .pipe(gulp.dest(destinations.css))
 
 # Checks that the coffeescript code passes linting
 gulp.task 'lint', ->
   gulp.src(sources.coffee)
-  .pipe(coffeelint())
-  .pipe(coffeelint.reporter())
+  .pipe($.coffeelint())
+  .pipe($.coffeelint.reporter())
 
 # Compiles to coffeescript.
 # If we are in dist env, concat all the files and uglify them
 gulp.task 'scripts', ->
   stream = gulp.src(sources.app)
-  .pipe(coffee({bare: true}).on('error', gutil.log))
+  .pipe($.coffee({bare: true}).on('error', gutil.log))
 
   # On dist env, we only want one uglified file for the whole app
   if isDist
-    stream = stream.pipe(concat('app.js')).pipe(uglify())
+    stream = stream.pipe($.concat('app.js')).pipe($.uglify())
 
   stream.pipe(gulp.dest(destinations.js))
 
 # Transforms the templates to js using html2js to a single file and minify it
 gulp.task 'templates', ->
   gulp.src(sources.templates)
-  .pipe(minifyHTML(
+  .pipe($.minifyHtml(
       empty: true
       spare: true
       quotes: true
   ))
-  .pipe(html2js({moduleName: 'templates'}))
-  .pipe(concat('templates.js'))
-  .pipe(if isDist then uglify() else gutil.noop())
+  .pipe($.ngHtml2js({moduleName: 'templates'}))
+  .pipe($.concat('templates.js'))
+  .pipe(if isDist then $.uglify() else gutil.noop())
   .pipe(gulp.dest(destinations.js))
 
 # Copy the 3rd party libs over
@@ -124,13 +115,13 @@ gulp.task 'assets', ->
 # Injects js/css tags into index.html
 gulp.task 'index', ->
   gulp.src(injectPaths, {read: false})
-  .pipe(inject(sources.index, {ignorePath: distFolderName, addRootSlash: false}))
+  .pipe($.inject(sources.index, {ignorePath: distFolderName, addRootSlash: false}))
   .pipe(gulp.dest(destinations.index))
 
 # Run tests only once with karma
 gulp.task 'karma', ->
   gulp.src(testFiles)
-  .pipe(karma(
+  .pipe($.karma(
     configFile: 'karma.conf.coffee'
     action: 'run'
   ))
@@ -139,7 +130,7 @@ gulp.task 'karma', ->
 # Run karma and tell it to run the tests on filechanges
 gulp.task 'test-continuous', ->
   gulp.src(testFiles)
-  .pipe(karma(
+  .pipe($.karma(
     configFile: 'karma.conf.coffee'
     action: 'watch'
   ))
@@ -154,7 +145,7 @@ gulp.task 'ci', ['karma', 'protractor']
 
 # Deletes build/ and dist/
 gulp.task 'clean', ->
-  gulp.src(['dist/', 'build/'], {read: false}).pipe(clean())
+  gulp.src(['dist/', 'build/'], {read: false}).pipe($.clean())
 
 # Reloads the page for us
 gulp.task 'browser-sync', ->
