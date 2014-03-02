@@ -162,14 +162,14 @@ gulp.task 'browser-sync', ->
     'build/*.html'
     'build/**/*.js'
     'build/style/*.css'
-    ],
+  ],
     server:
       baseDir: './build'
 
 # By default, we first want to build the project, then start karma runner and
 # the watchers
 gulp.task 'default', ['build'], ->
-  runSequence 'browser-sync', ['test-continuous', 'watch']
+  runSequence 'browser-sync', ['watch']
 
 # Build the project
 gulp.task 'build', ->
@@ -178,7 +178,7 @@ gulp.task 'build', ->
 # Setup watchers for the different files
 gulp.task 'watch', ->
   gulp.watch sources.sass, ['style']
-  gulp.watch sources.app, ['lint', 'scripts', 'index']
+  gulp.watch sources.app, ['lint', 'scripts']
   gulp.watch sources.templates, ['templates']
   gulp.watch sources.index, ['index']
   gulp.watch sources.assets, ['assets']
