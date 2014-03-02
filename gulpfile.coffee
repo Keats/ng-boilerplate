@@ -77,7 +77,7 @@ injectPaths = [
 # Compiles SASS with libsass to a compressed output
 gulp.task 'style', ->
   gulp.src(sources.sass)
-  .pipe(sass({outputStyle: 'compressed'}))
+  .pipe(sass({outputStyle: 'compressed', errLogToConsole: true}))
   .pipe(gulp.dest(destinations.css))
 
 # Checks that the coffeescript code passes linting
