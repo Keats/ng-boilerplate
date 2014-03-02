@@ -7,7 +7,7 @@ before_install:
   - git submodule init
   - git submodule update
 install:
-  - npm install -g bower gulp
+  - npm install -g bower gulp@3.5.2
   - npm install
   - bower install
   - ./node_modules/protractor/bin/webdriver-manager update
