@@ -19,3 +19,5 @@ module.exports = (config) ->
     exclude: [
       'src/tests/integration/**/*.coffee'
     ]
+    preprocessors:
+      '**/*.coffee': ['coffee']

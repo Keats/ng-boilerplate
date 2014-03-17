@@ -7,6 +7,7 @@ gutil = require 'gulp-util'
 $ = require('gulp-load-plugins')()
 runSequence = require 'run-sequence'
 protractor = require('gulp-protractor').protractor
+webdriver_update = require('gulp-protractor').webdriver_update
 browserSync = require 'browser-sync'
 
 # CONFIG -------------------------------------------
@@ -125,7 +126,8 @@ gulp.task 'karma', ->
     configFile: 'karma.conf.coffee'
     action: 'run'
   ))
-  # TODO: handle errors (ie tests failed) when it's merged in gulp-karma
+  .on 'error', (err) ->
+    throw err
 
 # Run karma and tell it to run the tests on filechanges
 gulp.task 'test-continuous', ->
@@ -135,8 +137,9 @@ gulp.task 'test-continuous', ->
     action: 'watch'
   ))
 
-# Setting up the test task
-gulp.task 'protractor', ->
+# Setting up the protractor test task
+gulp.task 'webdriver_update', webdriver_update
+gulp.task 'protractor', ['webdriver_update'], ->
   gulp.src(sources.integration)
   .pipe(protractor(configFile: 'protractor.conf.js'))
   .on 'error', (e) -> throw e
@@ -156,11 +159,12 @@ gulp.task 'browser-sync', ->
   ],
     server:
       baseDir: './build'
+    open: false
 
 # By default, we first want to build the project, then start karma runner and
 # the watchers
 gulp.task 'default', ['build'], ->
-  runSequence 'browser-sync', ['watch']
+  runSequence 'browser-sync', ['watch', 'test-continuous']
 
 # Build the project
 gulp.task 'build', ->
