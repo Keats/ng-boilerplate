@@ -5,6 +5,7 @@ gutil = require 'gulp-util'
 # Load plugins automatically from package.jso
 # Access them using $.pluginName
 $ = require('gulp-load-plugins')()
+sass = require 'gulp-ruby-sass'
 runSequence = require 'run-sequence'
 protractor = require('gulp-protractor').protractor
 webdriver_update = require('gulp-protractor').webdriver_update
@@ -66,10 +67,11 @@ injectPaths = [
 
 # TASKS ----------------------------------------------------------------------
 
-# Compiles SASS with libsass to a compressed output
+# Compiles SASS with ruby sass for now to a compressed output
+# Switch to libsass when it supports sass 3.3
 gulp.task 'style', ->
   gulp.src(sources.sass)
-  .pipe($.sass({outputStyle: 'compressed', errLogToConsole: true}))
+  .pipe(sass({style: 'nested'}))
   .pipe(gulp.dest(destinations.css))
 
 # Checks that the coffeescript code passes linting
