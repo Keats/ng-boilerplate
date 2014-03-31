@@ -2,5 +2,9 @@
 @import "snowflake/neat/neat-helpers";
 
 // Define your breakpoints
-$tablet: new-breakpoint(max-width 768px 8);
 $mobile: new-breakpoint(max-width 480px 4);
+$tablet: new-breakpoint(max-width 768px min-width 481px 8);
+$desktop: new-breakpoint(min-width 769px);
+
+// no gutter, we'll define our own margin if needed
+$gutter: em(0);
