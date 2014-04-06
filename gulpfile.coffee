@@ -20,7 +20,7 @@ isDist = gutil.env.type is 'dist'
 sources =
   sass: 'src/style/**/*.scss'
   coffee: 'src/**/*.coffee'
-  app: ['src/**/*.coffee', '!src/**/*.tests.coffee']
+  app: ['src/**/*.ts', '!src/**/*.tests.coffee']
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
   integration: 'src/tests/integration/**/*.coffee'
@@ -91,6 +91,16 @@ gulp.task 'scripts', ->
     stream = stream.pipe($.concat('app.js')).pipe($.uglify())
 
   stream.pipe(gulp.dest(destinations.js))
+
+gulp.task 'lint-typescript', ->
+  gulp.src(sources.app)
+  .pipe($.tslint())
+  .pipe($.tslint.report('prose', {emitError: false}))
+
+gulp.task 'typescript', ->
+  gulp.src(sources.app)
+  .pipe($.tsc({ emitError: false }))
+  .pipe(gulp.dest(destinations.js))
 
 # Transforms the templates to js using html2js to a single file and minify it
 gulp.task 'templates', ->
@@ -170,12 +180,12 @@ gulp.task 'default', ['build'], ->
 
 # Build the project
 gulp.task 'build', ->
-  runSequence 'clean', ['style', 'assets', 'lint', 'scripts', 'templates', 'libs'], 'index'
+  runSequence 'clean', ['style', 'assets', 'lint-typescript', 'typescript', 'templates', 'libs'], 'index'
 
 # Setup watchers for the different files
 gulp.task 'watch', ->
   gulp.watch sources.sass, ['style']
-  gulp.watch sources.app, ['lint', 'scripts']
+  gulp.watch sources.app, ['lint-typescript', 'typescript']
   gulp.watch sources.templates, ['templates']
   gulp.watch sources.index, ['index']
   gulp.watch sources.assets, ['assets']
