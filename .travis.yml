@@ -11,7 +11,7 @@ install:
   - gem install sass
   - npm install
   - bower install
-  - gulp build --require coffee-script/register
+  - gulp build
   - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 & 
 script:
-  - gulp ci --require coffee-script/register
+  - gulp ci
