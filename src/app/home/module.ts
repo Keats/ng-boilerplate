@@ -1,33 +1,33 @@
 /// <reference path="../../types/types.ts"/>
 
 var modules = [
-  'ui.router.state'
+  "ui.router.state"
 ];
 
-var home = angular.module('ngBoilerplate.home', modules);
+var home = angular.module("ngBoilerplate.home", modules);
 
-var homeConfig = function($stateProvider:ng.ui.IStateProvider) {
-  $stateProvider.state('home', {
-    url: '/home',
-    controller: 'HomeController',
-    templateUrl: 'home/index.html',
+var homeConfig = function($stateProvider: ng.ui.IStateProvider) {
+  $stateProvider.state("home", {
+    url: "/home",
+    controller: "HomeController",
+    templateUrl: "home/index.html",
     data: {
-      pageTitle: 'Home'
+      pageTitle: "Home"
     }
   });
 };
 
-homeConfig.$inject = ['$stateProvider'];
+homeConfig.$inject = ["$stateProvider"];
 home.config(homeConfig);
 
 class HomeController {
   static $inject = [
-    '$scope'
+    "$scope"
   ];
 
   constructor(private $scope: ng.IScope) {
-    console.log('hello');
+    console.log("hello");
   }
 }
 
-home.controller('HomeController', HomeController);
+home.controller("HomeController", HomeController);

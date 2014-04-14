@@ -1,18 +1,18 @@
 /// <reference path="../types/types.ts"/>
 
 var modules = [
-  'templates',
+  "templates",
 
-  'ngBoilerplate.home',
+  "ngBoilerplate.home",
 
-  'ui.router.state'
+  "ui.router.state"
 ];
 
-var appModule = angular.module('ngBoilerplate', modules);
+var appModule = angular.module("ngBoilerplate", modules);
 
 var appConfig = function($urlRouterProvider: ng.ui.IUrlRouterProvider) {
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise("/home");
 };
 
-appConfig.$inject = ['$urlRouterProvider'];
+appConfig.$inject = ["$urlRouterProvider"];
 appModule.config(appConfig);

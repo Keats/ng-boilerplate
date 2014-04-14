@@ -7,7 +7,7 @@ exports.config = {
   capabilities: {
     browserName: 'firefox'
   },
-  specs: ['src/tests/integration/**/*.coffee'],
+  specs: ['src/tests/integration/**/*.js'],
   baseUrl: 'http://localhost:8001',
   framework: 'mocha',
   mochaOpts: {
