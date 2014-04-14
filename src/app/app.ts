@@ -1,4 +1,4 @@
-/// <reference path="types.ts"/>
+/// <reference path="../types/types.ts"/>
 
 var modules = [
   'templates',

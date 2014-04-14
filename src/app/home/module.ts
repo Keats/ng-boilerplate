@@ -1,4 +1,4 @@
-/// <reference path="../types.ts"/>
+/// <reference path="../../types/types.ts"/>
 
 var modules = [
   'ui.router.state'
@@ -9,12 +9,8 @@ var home = angular.module('ngBoilerplate.home', modules);
 var homeConfig = function($stateProvider:ng.ui.IStateProvider) {
   $stateProvider.state('home', {
     url: '/home',
-    views: {
-      main: {
-        controller: 'HomeController',
-        templateUrl: 'home/index.html'
-      }
-    },
+    controller: 'HomeController',
+    templateUrl: 'home/index.html',
     data: {
       pageTitle: 'Home'
     }
