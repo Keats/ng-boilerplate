@@ -2,6 +2,9 @@ language: node_js
 node_js:
   - "0.10"
 before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3 # give xvfb some time to start
   - git submodule init
   - git submodule update
 install:
@@ -12,4 +15,4 @@ install:
   - gulp build
   - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 &
 script:
-  - gulp ci
+  - gulp karma-once && gulp protractor

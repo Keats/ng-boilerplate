@@ -160,5 +160,3 @@ gulp.task('build', function () {
 gulp.task('default', ['browser-sync', 'build'], function () {
     return runSequence(['watch', 'karma-watch']);
 });
-
-gulp.task('ci', ['karma-once', 'protractor']);
