@@ -17,10 +17,4 @@ describe("protractor library", function() {
     expect($).to.exist;
   });
 
-  it("should wrap webdriver", function() {
-    var title;
-    browser.get("index.html");
-    title = element(By.id('title'));
-    expect(title.getText()).to.eventually.equal('Hello');
-  });
 });

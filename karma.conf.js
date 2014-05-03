@@ -2,10 +2,9 @@ module.exports = function(config) {
 
   config.set({
     frameworks: ['mocha', 'chai-sinon'],
-    browsers: ['Firefox'],
+    browsers: ['PhantomJS'],
     plugins: [
         'karma-mocha',
-        'karma-firefox-launcher',
         'karma-typescript-preprocessor',
         'karma-phantomjs-launcher',
         'karma-chai-sinon'
