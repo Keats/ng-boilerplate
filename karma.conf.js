@@ -11,11 +11,11 @@ module.exports = function(config) {
         'karma-chai-sinon'
     ],
     files: [
-        'libs/angular/angular.js',
-        'libs/angular-ui-router/release/angular-ui-router.js',
-        'libs/angular-mocks/angular-mocks.js',
-        'libs/lodash/dist/lodash.js',
-        'libs/restangular/dist/restangular.js',
+        'vendor/angular/angular.js',
+        'vendor/angular-ui-router/release/angular-ui-router.js',
+        'vendor/angular-mocks/angular-mocks.js',
+        'vendor/lodash/dist/lodash.js',
+        'vendor/restangular/dist/restangular.js',
         'build/src/templates.js',
         'src/**/*.js'
     ],

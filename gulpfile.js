@@ -16,31 +16,31 @@ var globs = {
     assets: 'src/assets/**/*.*',
     app: 'src/app/**/*.ts',
     appWithDefinitions: 'src/**/*.ts',
-    integration: 'src/tests/integration/**/*.js', // maybe remove that?
+    integration: 'src/tests/integration/**/*.js',
     index: 'src/index.html'
 };
 
 var destinations = {
     css: "" + outputFolder + "/style",
     js: "" + outputFolder + "/src",
-    libs: "" + outputFolder + "/libs",
+    libs: "" + outputFolder + "/vendor",
     assets: "" + outputFolder + "/assets",
     index: "" + outputFolder
 };
 
-// find a better way to handle 3rd party libs than that
-var libs = {
+// find a better way to handle 3rd party vendor than that
+var vendor = {
     dev: [
-        'libs/angular/angular.js',
-        'libs/angular-ui-router/release/angular-ui-router.js',
-        'libs/lodash/dist/lodash.js',
-        'libs/restangular/dist/restangular.js',
+        'vendor/angular/angular.js',
+        'vendor/angular-ui-router/release/angular-ui-router.js',
+        'vendor/lodash/dist/lodash.js',
+        'vendor/restangular/dist/restangular.js',
     ],
     dist: [
-        'libs/angular/angular.min.js',
-        'libs/angular-ui-router/release/angular-ui-router.min.js',
-        'libs/lodash/dist/lodash.min.js',
-        'libs/restangular/dist/restangular.min.js',
+        'vendor/angular/angular.min.js',
+        'vendor/angular-ui-router/release/angular-ui-router.min.js',
+        'vendor/lodash/dist/lodash.min.js',
+        'vendor/restangular/dist/restangular.min.js',
     ]
 };
 
@@ -79,8 +79,6 @@ gulp.task('ts-compile', function () {
         .pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
         .pipe(isDist ? plugins.uglify() : plugins.util.noop())
         .pipe(gulp.dest(destinations.js));
-    // .pipe(browserSync.reload({stream: true, once: true}) makes runsequence fail
-    // for some reasons here.
 });
 
 gulp.task('templates', function () {
@@ -119,15 +117,13 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 gulp.task('browser-sync', function () {
     browserSync.init(null, {
-        server: {
-            baseDir: "./build"
-        },
+        server: {baseDir: "./build"},
         open: false
     });
 });
 
-gulp.task('copy-libs', function () {
-    return gulp.src(isDist ? libs.dist : libs.dev)
+gulp.task('copy-vendor', function () {
+    return gulp.src(isDist ? vendor.dist : vendor.dev)
         .pipe(gulp.dest(destinations.libs));
 });
 
@@ -155,7 +151,9 @@ gulp.task('watch', function () {
 
 gulp.task('build', function () {
     return runSequence(
-        'clean', ['sass', 'copy-assets', 'ts-compile', 'templates', 'copy-libs'], 'index'
+        'clean',
+        ['sass', 'copy-assets', 'ts-compile', 'templates', 'copy-vendor'],
+        'index'
     );
 });
 
