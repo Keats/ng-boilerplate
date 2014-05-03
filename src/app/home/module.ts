@@ -6,7 +6,7 @@ var modules = [
 
 var home = angular.module("ngBoilerplate.home", modules);
 
-var homeConfig = function($stateProvider: ng.ui.IStateProvider) {
+var homeConfig = function ($stateProvider: ng.ui.IStateProvider) {
   $stateProvider.state("home", {
     url: "/home",
     controller: "HomeController",
@@ -26,7 +26,7 @@ class HomeController {
   ];
 
   constructor(private $scope: ng.IScope) {
-    console.log("hello");
+    console.log("hello!");
   }
 }
 
