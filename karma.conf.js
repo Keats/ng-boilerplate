@@ -17,7 +17,8 @@ module.exports = function(config) {
         'vendor/lodash/dist/lodash.js',
         'vendor/restangular/dist/restangular.js',
         'build/src/templates.js',
-        'src/**/*.js'
+        'src/app/**/*.ts',
+        'src/tests/unit/**/*.js',
     ],
     exclude: ['src/tests/integration/**/*.js'],
     preprocessors: {
