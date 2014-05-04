@@ -3,24 +3,24 @@
 ![Dependencies Status](https://david-dm.org/Keats/ng-boilerplate.png)
 
 ## Goal
-This project serves as a starting point for AngularJS projects using Coffeescript and SASS (it can easily be changed though).  
+This project serves as a starting point for AngularJS projects using Typescript and SASS (it can easily be changed though).
 
 It provides code organisation by feature (see Structure for more details) and a build system ready for development and testing.  
 
-It also uses [Snowflake](https://github.com/Keats/snowflake) which is Bourbon + Neat + Foundation 5.
+It also uses [Snowflake](https://github.com/Keats/snowflake) which is Normalize + Bourbon + Neat + Bitters.
 
 The build system is using [Gulp](http://gulpjs.com/) instead of the usual Grunt for speed and simplicity (I wrote an [article](http://vincent.is/introducing-people-to-gulp/) introducing it with examples).  
 The code instead of configuration approach makes it easy to modify things compared to Grunt.  
 
 So in short you get:
 
-- automatic SASS compilation using libsass
-- automatic coffeescript linting and compilation (+ concatenation and minification on dist environment)
+- automatic SASS compilation using ruby sass (libsass does not support all the features needed yet)
+- automatic typescript linting and compilation (+ concatenation and minification on dist environment)
 - automatic preload of templates using html2js (+ minification on dist environment)
 - continuous testing with karma
 - integration testing with protractor
 - automatic copy of libs and assets
-- automatic creation of the tags in index.html, ie no need to insert js/css tags by hand
+- automatic injections of css/js files in index.html
 - CI setup via Travis
 
 
@@ -40,7 +40,7 @@ $ git submodule update
 $ sudo npm -g install gulp
 $ npm install
 $ bower install
-$ gulp --require coffee-script/register
+$ gulp
 ```
 
 ## Structure
@@ -58,13 +58,15 @@ ng-boilerplate/
   |  |  |- **/*.html
   |  |- tests/
   |  |  |- unit
-  |  |  |  |- **/*.coffee
+  |  |  |  |- **/*.js
   |  |  |- integration
-  |  |  |  |- **/*.coffee
-  |- libs/
+  |  |  |  |- **/*.js
+  |  |- types/
+  |  |  |  |- **/*.d.ts
+  |- vendor/
   |  |- angular/
   |  |- angular-ui-router/
-  |- gulpfile.coffee
+  |- gulpfile.js
 ```
 
 This app organisation groups code by feature but not to the point of grouping the templates/tests/css inside it (it's really to change that in the gulpfile if you want to do that though).  
@@ -76,20 +78,10 @@ Look at the home module present in the boilerplate to see how you can integrate 
 This uses gulp (http://gulpjs.com/) so you can call any of the tasks defined in the gulpfile.
 The default one watches over the files and runs the associated tasks when needed and is called like this:
 ```bash
-$ gulp --require coffee-script/register
+$ gulp
 ```
 
 To build the version to distribute, run the following:
 ```bash
-$ gulp build --require coffee-script/register --type dist
+$ gulp build --type dist
 ```
-
-To run units + integrations tests (you need the build directory for the integration tests to run):
-```bash
-$ gulp build --require coffee-script/register
-$ cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 & 
-$ gulp ci --require coffee-script/register
-```
-
-
-
