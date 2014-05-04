@@ -1,5 +1,5 @@
 build/
-libs/
+vendor/
 node_modules/
 .sass-cache/
 
