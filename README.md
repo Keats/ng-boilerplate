@@ -1,6 +1,6 @@
 # ng-boilerplate
 [![Build Status](https://travis-ci.org/Keats/ng-boilerplate.png?branch=master)](https://travis-ci.org/Keats/ng-boilerplate)
-![Dependencies Status](https://david-dm.org/Keats/ng-boilerplate.png)
+[![devDependency Status](https://david-dm.org/Keats/ng-boilerplate/dev-status.svg)](https://david-dm.org/Keats/ng-boilerplate#info=devDependencies)
 
 ## Goal
 This project serves as a starting point for AngularJS projects using Typescript and SASS (it can easily be changed though).
