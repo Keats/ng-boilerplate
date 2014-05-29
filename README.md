@@ -30,7 +30,7 @@ To start your own project, you can clone that project, get rid of the history, c
 $ git clone git://github.com/Keats/ng-boilerplate myproject
 $ cd myproject
 $ git checkout --orphan temp
-$ git commit 'initial commit'
+$ git commit -m 'initial commit'
 $ git branch -D master
 $ git branch -m master
 $ git remote remove origin
