@@ -63,8 +63,7 @@ var karma = require('gulp-karma')({
 gulp.task('sass', function () {
     return gulp.src(globs.sass)
         .pipe(plugins.sass({style: isDist ? 'compressed' : 'nested'}))
-        .pipe(gulp.dest(destinations.css))
-        .pipe(browserSync.reload({stream: true, once: true}));
+        .pipe(gulp.dest(destinations.css));
 });
 
 gulp.task('ts-lint', function () {
@@ -91,8 +90,7 @@ gulp.task('templates', function () {
         .pipe(plugins.ngHtml2js({moduleName: 'templates'}))
         .pipe(plugins.concat('templates.js'))
         .pipe(isDist ? plugins.uglify() : plugins.util.noop())
-        .pipe(gulp.dest(destinations.js))
-        .pipe(browserSync.reload({stream: true, once: true}));
+        .pipe(gulp.dest(destinations.js));
 });
 
 gulp.task('clean', function () {
@@ -116,7 +114,7 @@ gulp.task('protractor', ['webdriver_update'], function () {
 });
 
 gulp.task('browser-sync', function () {
-    browserSync.init(null, {
+    this.bs = browserSync.init(null, {
         server: {baseDir: "./build"},
         open: false
     });
@@ -141,12 +139,18 @@ gulp.task('index', function () {
         .pipe(gulp.dest(destinations.index));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', ['browser-sync'], function () {
+    var bs = this.bs;
+
     gulp.watch(globs.sass, ['sass']);
     gulp.watch(globs.appWithDefinitions, ['ts-lint', 'ts-compile']);
     gulp.watch(globs.templates, ['templates']);
     gulp.watch(globs.index, ['index']);
     gulp.watch(globs.assets, ['copy-assets']);
+
+    gulp.watch(['build/**/*']).on('change', function (file) {
+        bs.events.emit('file:changed', { path: file.path });
+    });
 });
 
 gulp.task('build', function () {
@@ -157,6 +161,6 @@ gulp.task('build', function () {
     );
 });
 
-gulp.task('default', ['browser-sync', 'build'], function () {
+gulp.task('default', ['build'], function () {
     return runSequence(['watch', 'karma-watch']);
 });

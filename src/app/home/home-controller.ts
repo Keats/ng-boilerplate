@@ -13,7 +13,7 @@ class HomeController {
     private $rootScope: core.IRootScope
   ) {
     $scope.vm = this;
-    $rootScope.pageTitle = 'Home';
+    $rootScope.pageTitle = "Home";
   }
 }
 
