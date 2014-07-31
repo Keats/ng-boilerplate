@@ -95,7 +95,7 @@ gulp.task('templates', function () {
 
 gulp.task('clean', function () {
     return gulp.src(['dist/', 'build/'], {read: false})
-        .pipe(plugins.clean());
+        .pipe(plugins.rimraf());
 });
 
 gulp.task('karma-once', function () {
@@ -114,10 +114,15 @@ gulp.task('protractor', ['webdriver_update'], function () {
 });
 
 gulp.task('browser-sync', function () {
-    this.bs = browserSync.init(null, {
-        server: {baseDir: "./build"},
-        open: false
-    });
+  return browserSync.init(null, {
+    open: false,
+    server: {
+      baseDir: "./build"
+    },
+    watchOptions: {
+      debounceDelay: 1000
+    }
+  });
 });
 
 gulp.task('copy-vendor', function () {
@@ -131,25 +136,27 @@ gulp.task('copy-assets', function () {
 });
 
 gulp.task('index', function () {
-    return gulp.src(injectPaths, {read: false})
-        .pipe(plugins.inject(globs.index, {
+      var target = gulp.src(globs.index);
+      var sources = gulp.src(injectPaths, {read: false});
+      return target.pipe(
+          plugins.inject(sources, {
             ignorePath: outputFolder,
             addRootSlash: false
-        }))
-        .pipe(gulp.dest(destinations.index));
+          })
+      ).pipe(gulp.dest(destinations.index));
 });
 
 gulp.task('watch', ['browser-sync'], function () {
-    var bs = this.bs;
-
     gulp.watch(globs.sass, ['sass']);
     gulp.watch(globs.appWithDefinitions, ['ts-lint', 'ts-compile']);
     gulp.watch(globs.templates, ['templates']);
     gulp.watch(globs.index, ['index']);
     gulp.watch(globs.assets, ['copy-assets']);
 
-    gulp.watch(['build/**/*']).on('change', function (file) {
-        bs.events.emit('file:changed', { path: file.path });
+    gulp.watch('build/**/*', function(file) {
+      if (file.type === "changed") {
+        return browserSync.reload(file.path);
+      }
     });
 });
 
