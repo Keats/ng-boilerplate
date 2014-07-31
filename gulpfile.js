@@ -72,10 +72,16 @@ gulp.task('ts-lint', function () {
         .pipe(plugins.tslint.report('prose', {emitError: true}));
 });
 
+var tsProject = plugins.type.createProject({
+    declarationFiles: true,
+    noExternalResolve: true
+});
+
 gulp.task('ts-compile', function () {
-    return gulp.src(globs.appWithDefinitions)
-        .pipe(plugins.tsc({emitError: false}))
-        .pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
+    var tsResult = gulp.src(globs.appWithDefinitions)
+        .pipe(plugins.type(tsProject));
+
+    return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
         .pipe(isDist ? plugins.uglify() : plugins.util.noop())
         .pipe(gulp.dest(destinations.js));
 });
