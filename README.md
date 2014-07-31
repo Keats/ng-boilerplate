@@ -39,7 +39,6 @@ $ git submodule init
 $ git submodule update
 $ sudo npm -g install gulp
 $ npm install
-$ bower install
 $ gulp
 ```
 

@@ -28,31 +28,27 @@ var destinations = {
     index: "" + outputFolder
 };
 
-// find a better way to handle 3rd party vendor than that
-var vendor = {
-    dev: [
-        'vendor/angular/angular.js',
-        'vendor/angular-ui-router/release/angular-ui-router.js',
-        'vendor/lodash/dist/lodash.js',
-        'vendor/restangular/dist/restangular.js',
-    ],
-    dist: [
-        'vendor/angular/angular.min.js',
-        'vendor/angular-ui-router/release/angular-ui-router.min.js',
-        'vendor/lodash/dist/lodash.min.js',
-        'vendor/restangular/dist/restangular.min.js',
-    ]
-};
-
-var injectPaths = [
-    "" + destinations.libs + "/angular." + (isDist ? 'min.' : '') + "js",
-    "" + destinations.libs + "/angular-ui-router." + (isDist ? 'min.' : '') + "js",
-    "" + destinations.libs + "/lodash." + (isDist ? 'min.' : '') + "js",
-    "" + destinations.libs + "/restangular." + (isDist ? 'min.' : '') + "js",
-    "" + destinations.js + "/app/**/*.js",
-    "" + destinations.js + "/templates.js",
-    "" + destinations.css + "/*.css"
+// When adding a 3rd party we want to insert in the html, add it to
+// vendoredLibs, order matters
+// Find out why uglifying angular doesn't work
+var vendoredLibs = [
+    'vendor/angular.js',
+    'vendor/ui-router.js',
+    'vendor/lodash.js',
+    'vendor/restangular.js',
 ];
+
+var injectLibsPaths = [];
+
+vendoredLibs.forEach(function(lib) {
+    injectLibsPaths.push(destinations.libs + '/' + lib.split('/')[1]);
+});
+
+var injectPaths = injectLibsPaths.concat([
+    isDist? destinations.js + '/app.js' : destinations.js + "/app/**/*.js",
+    destinations.js + "/templates.js",
+    destinations.css + "/*.css"
+]);
 
 var karma = require('gulp-karma')({
     configFile: 'karma.conf.js'
@@ -132,7 +128,8 @@ gulp.task('browser-sync', function () {
 });
 
 gulp.task('copy-vendor', function () {
-    return gulp.src(isDist ? vendor.dist : vendor.dev)
+    return gulp.src(vendoredLibs)
+        .pipe(isDist ? plugins.uglify() : plugins.util.noop())
         .pipe(gulp.dest(destinations.libs));
 });
 
@@ -142,14 +139,13 @@ gulp.task('copy-assets', function () {
 });
 
 gulp.task('index', function () {
-      var target = gulp.src(globs.index);
-      var sources = gulp.src(injectPaths, {read: false});
-      return target.pipe(
-          plugins.inject(sources, {
+    var target = gulp.src(globs.index);
+    return target.pipe(
+        plugins.inject(gulp.src(injectPaths, {read: false}), {
             ignorePath: outputFolder,
             addRootSlash: false
-          })
-      ).pipe(gulp.dest(destinations.index));
+        })
+    ).pipe(gulp.dest(destinations.index));
 });
 
 gulp.task('watch', ['browser-sync'], function () {

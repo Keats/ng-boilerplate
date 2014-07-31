@@ -8,10 +8,9 @@ before_install:
   - git submodule init
   - git submodule update
 install:
-  - npm install -g bower gulp
+  - npm install -g gulp
   - gem install sass
   - npm install
-  - bower install
   - gulp webdriver_update
   - gulp build
   - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 &
