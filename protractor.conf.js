@@ -10,6 +10,7 @@ exports.config = {
     framework: 'mocha',
     mochaOpts: {
         ui: 'bdd',
-        reporter: 'list'
+        reporter: 'list',
+        enableTimeouts: false
     }
 };
