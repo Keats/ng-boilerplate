@@ -9,10 +9,9 @@ var modules = [
 ];
 
 var appModule = angular.module("ngBoilerplate", modules);
-
-var appConfig = function ($urlRouterProvider: ng.ui.IUrlRouterProvider) {
-  $urlRouterProvider.otherwise("/home");
-};
-
-appConfig.$inject = ["$urlRouterProvider"];
 appModule.config(appConfig);
+
+/* @ngInject */
+function appConfig($urlRouterProvider: ng.ui.IUrlRouterProvider) {
+  $urlRouterProvider.otherwise("/home");
+}

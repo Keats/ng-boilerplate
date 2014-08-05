@@ -7,14 +7,13 @@ var modules = [
 ];
 
 var home = angular.module("ngBoilerplate.home", modules);
+home.config(homeConfig);
 
-var homeConfig = function ($stateProvider: ng.ui.IStateProvider) {
+/* @ngInject */
+function homeConfig($stateProvider: ng.ui.IStateProvider) {
   $stateProvider.state("home", {
     url: "/home",
     controller: "HomeController",
     templateUrl: "home/index.html"
   });
-};
-
-homeConfig.$inject = ["$stateProvider"];
-home.config(homeConfig);
+}

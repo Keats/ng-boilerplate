@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 plugins.sass = require('gulp-ruby-sass');
+plugins.ngAnnotate = require('gulp-ng-annotate');
 
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
@@ -78,6 +79,7 @@ gulp.task('ts-compile', function () {
         .pipe(plugins.type(tsProject));
 
     return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
+        .pipe(plugins.ngAnnotate())
         .pipe(isDist ? plugins.uglify() : plugins.util.noop())
         .pipe(gulp.dest(destinations.js));
 });
