@@ -81,6 +81,7 @@ gulp.task('ts-compile', function () {
     return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
         .pipe(plugins.ngAnnotate())
         .pipe(isDist ? plugins.uglify() : plugins.util.noop())
+        .pipe(plugins.wrap({ src: './iife.txt'}))
         .pipe(gulp.dest(destinations.js));
 });
 
