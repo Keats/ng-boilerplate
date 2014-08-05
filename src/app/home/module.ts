@@ -1,13 +1,5 @@
 /// <reference path="../../types/types.ts"/>
 
-var modules = [
-  "home.index",
-
-  "ui.router.state"
-];
-
-var home = angular.module("ngBoilerplate.home", modules);
-home.config(homeConfig);
 
 /* @ngInject */
 function homeConfig($stateProvider: ng.ui.IStateProvider) {
@@ -17,3 +9,10 @@ function homeConfig($stateProvider: ng.ui.IStateProvider) {
     templateUrl: "home/index.html"
   });
 }
+
+angular
+  .module("ngBoilerplate.home", [
+    "home.index",
+    "ui.router.state"
+  ])
+  .config(homeConfig);

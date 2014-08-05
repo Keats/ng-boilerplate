@@ -1,16 +1,13 @@
 /// <reference path="../../types/types.ts"/>
 
-var home = angular.module("home.index", []);
-
 class HomeController {
-    /* @ngInject */
-    constructor(
-    private $scope: core.IScope,
-    private $rootScope: core.IRootScope
-) {
-      $scope.vm = this;
-      $rootScope.pageTitle = "Home";
+  /* @ngInject */
+  constructor(private $scope: core.IScope, private $rootScope: core.IRootScope) {
+    $scope.vm = this;
+    $rootScope.pageTitle = "Home";
   }
 }
 
-home.controller("HomeController", HomeController);
+angular
+  .module("home.index", [])
+  .controller("HomeController", HomeController);
