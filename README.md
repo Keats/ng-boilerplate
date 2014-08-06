@@ -15,6 +15,7 @@ The code instead of configuration approach makes it easy to modify things compar
 So in short you get:
 
 - automatic SASS compilation using ruby sass (libsass does not support all the features needed yet)
+- automatic DI annotation (via ng-annotate, no need for .$inject)
 - automatic typescript linting and compilation (+ concatenation and minification on dist environment)
 - automatic preload of templates using html2js (+ minification on dist environment)
 - continuous testing with karma
