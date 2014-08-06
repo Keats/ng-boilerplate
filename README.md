@@ -20,6 +20,7 @@ So in short you get:
 - automatic preload of templates using html2js (+ minification on dist environment)
 - continuous testing with karma
 - integration testing with protractor
+- exception decorator to deal with errors (in app/core/exceptions.decorator.js)
 - automatic copy of libs and assets
 - automatic injections of css/js files in index.html
 - CI setup via Travis
