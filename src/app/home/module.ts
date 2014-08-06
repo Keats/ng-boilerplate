@@ -5,7 +5,7 @@
 function homeConfig($stateProvider: ng.ui.IStateProvider) {
   $stateProvider.state("home", {
     url: "/home",
-    controller: "HomeController",
+    controller: "HomeController as vm",
     templateUrl: "home/index.html"
   });
 }

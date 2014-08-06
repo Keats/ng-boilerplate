@@ -6,8 +6,8 @@ declare module core {
     pageTitle: string;
   }
 
-  interface IScope extends ng.IScope {
-    vm: any;
+  // TODO: DELETE WHEN CLONING
+  interface IHomeController {
+    greeting: string;
   }
-
 }

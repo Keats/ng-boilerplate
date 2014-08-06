@@ -1,10 +1,13 @@
 /// <reference path="../../types/types.ts"/>
 
-class HomeController {
+
+class HomeController implements core.IHomeController {
+  greeting: string;
+
   /* @ngInject */
-  constructor(private $scope: core.IScope, private $rootScope: core.IRootScope) {
-    $scope.vm = this;
-    $rootScope.pageTitle = "Home";
+  constructor(private $rootScope: core.IRootScope) {
+    $rootScope.pageTitle = "Hello";
+    this.greeting = "hello";
   }
 }
 
