@@ -5,6 +5,7 @@
 @import "snowflake/bourbon/bourbon";
 @import "grid-settings";
 @import "snowflake/neat/neat";
-@import "bitters";
+
+// Settings for bitters are in bitters/_variables.scss, override them in a custom file
 
 // Import your app below
