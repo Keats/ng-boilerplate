@@ -31,7 +31,6 @@ var destinations = {
 
 // When adding a 3rd party we want to insert in the html, add it to
 // vendoredLibs, order matters
-// Find out why uglifying angular doesn't work
 var vendoredLibs = [
     'vendor/angular.js',
     'vendor/ui-router.js',
