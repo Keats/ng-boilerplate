@@ -59,6 +59,7 @@ var karma = require('gulp-karma')({
 gulp.task('sass', function () {
     return gulp.src(globs.sass)
         .pipe(plugins.sass({style: isDist ? 'compressed' : 'nested'}))
+        .on('error', function (err) { console.log(err.message); })
         .pipe(gulp.dest(destinations.css));
 });
 
