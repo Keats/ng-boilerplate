@@ -7,14 +7,12 @@ This project serves as a starting point for AngularJS projects using Typescript 
 
 It provides code organisation by feature (see Structure for more details) and a build system ready for development and testing.  
 
-It also uses [Snowflake](https://github.com/Keats/snowflake) which is Normalize + Bourbon + Neat + Bitters.
-
 The build system is using [Gulp](http://gulpjs.com/) instead of the usual Grunt for speed and simplicity (I wrote an [article](http://vincent.is/introducing-people-to-gulp/) introducing it with examples).  
 The code instead of configuration approach makes it easy to modify things compared to Grunt.  
 
 So in short you get:
 
-- automatic SASS compilation using ruby sass (libsass does not support all the features needed yet)
+- automatic SASS compilation using libsass  with auto-prefixing
 - automatic DI annotation (via ng-annotate, no need for .$inject)
 - automatic typescript linting and compilation (+ concatenation and minification on dist environment)
 - automatic preload of templates using html2js (+ minification on dist environment)
@@ -37,8 +35,6 @@ $ git branch -D master
 $ git branch -m master
 $ git remote remove origin
 $ git remote add origin yourgitrepourl.git
-$ git submodule init
-$ git submodule update
 $ sudo npm -g install gulp
 $ npm install
 $ gulp
