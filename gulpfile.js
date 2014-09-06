@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
-plugins.sass = require('gulp-ruby-sass');
 plugins.ngAnnotate = require('gulp-ng-annotate');
 
 var runSequence = require('run-sequence');
@@ -58,8 +57,8 @@ var karma = require('gulp-karma')({
 
 gulp.task('sass', function () {
     return gulp.src(globs.sass)
-        .pipe(plugins.sass({style: isDist ? 'compressed' : 'nested'}))
-        .on('error', function (err) { console.log(err.message); })
+        .pipe(plugins.sass({style: 'compressed', errLogToConsole: true}))
+        .pipe(plugins.autoprefixer())  // defauls to > 1%, last 2 versions, Firefox ESR, Opera 12.1
         .pipe(gulp.dest(destinations.css));
 });
 
