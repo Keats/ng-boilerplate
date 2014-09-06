@@ -34,7 +34,6 @@ var vendoredLibs = [
     'vendor/angular.js',
     'vendor/ui-router.js',
     'vendor/lodash.js',
-    'vendor/restangular.js',
 ];
 
 var injectLibsPaths = [];
