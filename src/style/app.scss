@@ -1,11 +1,5 @@
 @charset "UTF-8";
 
-// Reset, Bourbon, Neat and Bitters stuff
-@import "snowflake/normalize";
-@import "snowflake/bourbon/bourbon";
-@import "grid-settings";
-@import "snowflake/neat/neat";
+@import "normalize";
 
-// Settings for bitters are in bitters/_variables.scss, override them in a custom file
-
-// Import your app below
+// Import your framework/app below
