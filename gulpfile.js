@@ -43,6 +43,7 @@ vendoredLibs.forEach(function(lib) {
 });
 
 var injectPaths = injectLibsPaths.concat([
+    destinations.js +"/app/**/module.js",
     isDist? destinations.js + '/app.js' : destinations.js + "/app/**/*.js",
     destinations.js + "/templates.js",
     destinations.css + "/*.css"
