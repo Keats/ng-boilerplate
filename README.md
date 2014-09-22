@@ -61,8 +61,10 @@ ng-boilerplate/
   |  |- types/
   |  |  |  |- **/*.d.ts
   |- vendor/
-  |  |- angular/
-  |  |- angular-ui-router/
+  |  |- angular.js
+  |  |- angular-mocks.js
+  |  |- lodash.js
+  |  |- ui-router.js
   |- gulpfile.js
 ```
 
