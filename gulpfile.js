@@ -68,14 +68,14 @@ gulp.task('ts-lint', function () {
         .pipe(plugins.tslint.report('prose', {emitError: true}));
 });
 
-var tsProject = plugins.type.createProject({
+var tsProject = plugins.typescript.createProject({
     declarationFiles: true,
     noExternalResolve: true
 });
 
 gulp.task('ts-compile', function () {
     var tsResult = gulp.src(globs.appWithDefinitions)
-        .pipe(plugins.type(tsProject));
+        .pipe(plugins.typescript(tsProject));
 
     return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
         .pipe(plugins.ngAnnotate())
