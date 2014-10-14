@@ -6,8 +6,9 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 install:
-  - npm install -g gulp
+  - npm install -g bower gulp
   - npm install
+  - bower install
   - gulp webdriver_update
   - gulp build
   - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 &

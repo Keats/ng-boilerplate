@@ -10,10 +10,9 @@ module.exports = function (config) {
             'karma-chai-sinon'
         ],
         files: [
-            'vendor/angular.js',
-            'vendor/ui-router.js',
-            'vendor/angular-mocks.js',
-            'vendor/lodash.js',
+            'vendor/angular/angular.js',
+            'vendor/ui-router/release/angular-ui-router.js',
+            'vendor/angular-mocks/angular-mocks.js',
             'build/src/templates.js',
             'src/app/**/module.ts',
             'src/app/**/!(module).ts',

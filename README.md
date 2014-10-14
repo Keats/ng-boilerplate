@@ -35,7 +35,8 @@ $ git branch -D master
 $ git branch -m master
 $ git remote remove origin
 $ git remote add origin yourgitrepourl.git
-$ sudo npm -g install gulp
+$ sudo npm -g install bower gulp
+$ bower install
 $ npm install
 $ gulp
 ```
