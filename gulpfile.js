@@ -162,7 +162,7 @@ gulp.task('copy-assets', function () {
 gulp.task('index', function () {
   var target = gulp.src(globs.index);
   var _injectPaths = isDist ? injectPaths.dist : injectPaths.dev;
-  console.log(injectPaths);
+
   return target.pipe(
     plugins.inject(gulp.src(_injectPaths, {read: false}), {
       ignorePath: outputFolder,
