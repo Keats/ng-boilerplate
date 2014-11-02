@@ -1,0 +1,7 @@
+angular:
+    build: .
+    command: gulp
+    ports:
+        - "3000:3000"
+    volumes:
+        - .:/code
