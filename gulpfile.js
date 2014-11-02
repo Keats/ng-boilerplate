@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
+var del = require('del');
 plugins.ngAnnotate = require('gulp-ng-annotate');
 
 var runSequence = require('run-sequence');
@@ -117,9 +118,8 @@ gulp.task('templates', function () {
     .pipe(gulp.dest(destinations.js));
 });
 
-gulp.task('clean', function () {
-  return gulp.src(['dist/', 'build/'], {read: false})
-    .pipe(plugins.rimraf());
+gulp.task('clean', function (cb) {
+  del(['dist/', 'build/'], cb);
 });
 
 gulp.task('karma-once', function () {
