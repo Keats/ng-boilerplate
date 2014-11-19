@@ -56,7 +56,8 @@ vendoredLibs.forEach(function(lib) {
   injectLibsPaths.dev.push(destinations.libs + '/' + filename);
   // And get the minified version
   filename = filename.split('.')[0] + '.min.js';
-  vendoredLibsMin.push(filename);
+  splittedPath[splittedPath.length - 1] = filename;
+  vendoredLibsMin.push(splittedPath.join('/'));
   injectLibsPaths.dist.push(destinations.libs + '/' + filename);
 });
 
