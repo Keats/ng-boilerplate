@@ -1,7 +1,7 @@
 angular:
     build: .
     command: gulp
+    volumes:
+        - "./src:/home/angular/src"
     ports:
         - "3000:3000"
-    volumes:
-        - .:/code

@@ -16,7 +16,7 @@ module.exports = function (config) {
             'build/src/templates.js',
             'src/app/**/module.ts',
             'src/app/**/!(module).ts',
-            'src/tests/unit/**/*.js',
+            'src/tests/unit/**/*.js'
         ],
         exclude: ['src/tests/integration/**/*.js'],
         preprocessors: {
