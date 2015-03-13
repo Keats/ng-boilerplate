@@ -3,6 +3,9 @@
   "name": "ng-boilerplate",
   "version": "1.1.0",
   "homepage": "http://vincent.is",
+  "scripts": {
+    "gulp": "./node_modules/gulp/bin/gulp.js"
+  },
   "devDependencies": {
     "browser-sync": "^2.2.3",
     "chai": "^2.1.1",
