@@ -1,13 +1,12 @@
 var gulp = require('gulp');
-var plugins = require('gulp-load-plugins')();
+var $ = require('gulp-load-plugins')();
 var del = require('del');
-plugins.ngAnnotate = require('gulp-ng-annotate');
-
+var karma = require('karma').server;
 var browserSync = require('browser-sync');
 
 
 // VARIABLES ======================================================
-var isDist = plugins.util.env.type === 'dist';
+var isDist = $.util.env.type === 'dist';
 var outputFolder = isDist ? 'dist' : 'build';
 
 var globs = {
@@ -15,7 +14,9 @@ var globs = {
   templates: 'src/templates/**/*.html',
   assets: 'src/assets/**/*.*',
   app: 'src/app/**/*.ts',
-  appWithDefinitions: 'src/**/*.ts',
+  // karma typescript preprocessor generates a bunch of .ktp.ts which gets picked
+  // up by the watch, rinse and repeat
+  appWithDefinitions: ['src/**/*.ts', '!src/**/*.ktp.*'],
   integration: 'src/tests/integration/**/*.js',
   index: 'src/index.html'
 };
@@ -73,61 +74,61 @@ var karma = require('gulp-karma')({
     configFile: 'karma.conf.js'
 });
 
+var tsProject = $.typescript.createProject({
+  declarationFiles: true,
+  noExternalResolve: true
+});
 
 // TASKS ===========================================================
 
 gulp.task('sass', function () {
   return gulp.src(globs.sass)
-    .pipe(plugins.sass({style: 'compressed', errLogToConsole: true}))
-    .pipe(plugins.autoprefixer())  // defauls to > 1%, last 2 versions, Firefox ESR, Opera 12.1
-    .pipe(gulp.dest(destinations.css));
+    .pipe($.sass({style: 'compressed', errLogToConsole: true}))
+    .pipe($.autoprefixer())  // defauls to > 1%, last 2 versions, Firefox ESR, Opera 12.1
+    .pipe(gulp.dest(destinations.css))
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('ts-lint', function () {
   return gulp.src(globs.app)
-    .pipe(plugins.tslint())
-    .pipe(plugins.tslint.report('prose', {emitError: true}));
-});
-
-var tsProject = plugins.typescript.createProject({
-  declarationFiles: true,
-  noExternalResolve: true
+    .pipe($.tslint())
+    .pipe($.tslint.report('prose', {emitError: true}));
 });
 
 gulp.task('ts-compile', function () {
   var tsResult = gulp.src(globs.appWithDefinitions)
-    .pipe(plugins.typescript(tsProject));
+    .pipe($.typescript(tsProject));
 
-  return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
-    .pipe(plugins.ngAnnotate({gulpWarnings: false}))
-    .pipe(isDist ? plugins.uglify() : plugins.util.noop())
-    .pipe(plugins.wrap({ src: './iife.txt'}))
-    .pipe(gulp.dest(destinations.js));
+  return tsResult.js.pipe(isDist ? $.concat('app.js') : $.util.noop())
+    .pipe($.ngAnnotate({gulpWarnings: false}))
+    .pipe(isDist ? $.uglify() : $.util.noop())
+    .pipe($.wrap({ src: './iife.txt'}))
+    .pipe(gulp.dest(destinations.js))
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('templates', function () {
   return gulp.src(globs.templates)
-    .pipe(plugins.minifyHtml({
+    .pipe($.minifyHtml({
       empty: true,
       spare: true,
       quotes: true
     }))
-    .pipe(plugins.ngHtml2js({moduleName: 'templates'}))
-    .pipe(plugins.concat('templates.js'))
-    .pipe(isDist ? plugins.uglify() : plugins.util.noop())
-    .pipe(gulp.dest(destinations.js));
+    .pipe($.ngHtml2js({moduleName: 'templates'}))
+    .pipe($.concat('templates.js'))
+    .pipe(isDist ? $.uglify() : $.util.noop())
+    .pipe(gulp.dest(destinations.js))
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('clean', function (cb) {
   del(['dist/', 'build/'], cb);
 });
 
-gulp.task('karma-once', function () {
-  return karma.once();
-});
-
-gulp.task('karma-watch', function () {
-  return karma.start({autoWatch: true});
+gulp.task('karma-watch', function(cb) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js'
+  }, cb);
 });
 
 gulp.task('browser-sync', function () {
@@ -157,7 +158,7 @@ gulp.task('index', function () {
   var _injectPaths = isDist ? injectPaths.dist : injectPaths.dev;
 
   return target.pipe(
-    plugins.inject(gulp.src(_injectPaths, {read: false}), {
+    $.inject(gulp.src(_injectPaths, {read: false}), {
       ignorePath: outputFolder,
       addRootSlash: false
     })
@@ -165,17 +166,11 @@ gulp.task('index', function () {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(globs.sass, ['sass']);
-  gulp.watch(globs.appWithDefinitions, ['ts-lint', 'ts-compile']);
-  gulp.watch(globs.templates, ['templates']);
-  gulp.watch(globs.index, ['index']);
-  gulp.watch(globs.assets, ['copy-assets']);
-
-  gulp.watch('build/**/*', function (file) {
-    if (file.type === "changed") {
-      return browserSync.reload({stream: true});
-    }
-  });
+  gulp.watch(globs.sass, 'sass');
+  gulp.watch(globs.appWithDefinitions, gulp.series('ts-lint', 'ts-compile'));
+  gulp.watch(globs.templates, 'templates');
+  gulp.watch(globs.index, 'index');
+  gulp.watch(globs.assets, 'copy-assets');
 });
 
 gulp.task(
@@ -189,5 +184,5 @@ gulp.task(
 
 gulp.task(
   'default',
-  gulp.series('build', 'browser-sync', gulp.parallel('watch', 'karma-watch'))
+  gulp.series('build', gulp.parallel('browser-sync', 'watch', 'karma-watch'))
 );
