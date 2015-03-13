@@ -3,7 +3,6 @@ var plugins = require('gulp-load-plugins')();
 var del = require('del');
 plugins.ngAnnotate = require('gulp-ng-annotate');
 
-var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 
 
@@ -100,7 +99,7 @@ gulp.task('ts-compile', function () {
     .pipe(plugins.typescript(tsProject));
 
   return tsResult.js.pipe(isDist ? plugins.concat('app.js') : plugins.util.noop())
-    .pipe(plugins.ngAnnotate())
+    .pipe(plugins.ngAnnotate({gulpWarnings: false}))
     .pipe(isDist ? plugins.uglify() : plugins.util.noop())
     .pipe(plugins.wrap({ src: './iife.txt'}))
     .pipe(gulp.dest(destinations.js));
@@ -133,13 +132,13 @@ gulp.task('karma-watch', function () {
 
 gulp.task('webdriver_update', plugins.protractor.webdriver_update);
 
-gulp.task('protractor', ['webdriver_update'], function () {
+gulp.task('protractor', function () {
   return gulp.src(globs.integration)
     .pipe(plugins.protractor.protractor({configFile: 'protractor.conf.js'}));
 });
 
 gulp.task('browser-sync', function () {
-  return browserSync.init(null, {
+  return browserSync({
     open: false,
     server: {
       baseDir: "./build"
@@ -172,7 +171,7 @@ gulp.task('index', function () {
   ).pipe(gulp.dest(destinations.index));
 });
 
-gulp.task('watch', ['browser-sync'], function () {
+gulp.task('watch', function() {
   gulp.watch(globs.sass, ['sass']);
   gulp.watch(globs.appWithDefinitions, ['ts-lint', 'ts-compile']);
   gulp.watch(globs.templates, ['templates']);
@@ -181,19 +180,21 @@ gulp.task('watch', ['browser-sync'], function () {
 
   gulp.watch('build/**/*', function (file) {
     if (file.type === "changed") {
-      return browserSync.reload(file.path);
+      return browserSync.reload({stream: true});
     }
   });
 });
 
-gulp.task('build', function () {
-  return runSequence(
+gulp.task(
+  'build',
+  gulp.series(
     'clean',
-    ['sass', 'copy-assets', 'ts-compile', 'templates', 'copy-vendor'],
+    gulp.parallel('sass', 'copy-assets', 'ts-compile', 'templates', 'copy-vendor'),
     'index'
-  );
-});
+  )
+);
 
-gulp.task('default', ['build'], function () {
-  return runSequence(['watch', 'karma-watch']);
-});
+gulp.task(
+  'default',
+  gulp.series('build', 'browser-sync', gulp.parallel('watch', 'karma-watch'))
+);
