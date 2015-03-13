@@ -130,13 +130,6 @@ gulp.task('karma-watch', function () {
   return karma.start({autoWatch: true});
 });
 
-gulp.task('webdriver_update', plugins.protractor.webdriver_update);
-
-gulp.task('protractor', function () {
-  return gulp.src(globs.integration)
-    .pipe(plugins.protractor.protractor({configFile: 'protractor.conf.js'}));
-});
-
 gulp.task('browser-sync', function () {
   return browserSync({
     open: false,

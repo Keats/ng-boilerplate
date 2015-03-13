@@ -9,8 +9,6 @@ install:
   - npm install -g bower
   - npm install
   - bower install
-  - npm run gulp webdriver_update
   - npm run gulp build
-  - cd build && python -m SimpleHTTPServer 8001 > /dev/null 2>&1 &
 script:
-  - ./node_modules/karma/bin/karma start  --single-run && ./node_modules/protractor/bin/protractor
+  - ./node_modules/karma/bin/karma start --single-run
