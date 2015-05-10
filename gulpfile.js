@@ -83,7 +83,7 @@ var tsProject = $.typescript.createProject({
 
 gulp.task('sass', function () {
   return gulp.src(globs.sass)
-    .pipe($.sass({style: 'compressed', errLogToConsole: true}))
+    .pipe($.sass({style: 'compressed'}).on('error', $.sass.logError))
     .pipe($.autoprefixer())  // defauls to > 1%, last 2 versions, Firefox ESR, Opera 12.1
     .pipe(gulp.dest(destinations.css))
     .pipe(browserSync.reload({stream: true}));
