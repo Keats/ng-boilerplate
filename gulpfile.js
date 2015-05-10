@@ -70,10 +70,6 @@ vendoredLibs.forEach(function(lib) {
   ]);
 });
 
-var karma = require('gulp-karma')({
-    configFile: 'karma.conf.js'
-});
-
 var tsProject = $.typescript.createProject({
   declarationFiles: true,
   noExternalResolve: true
@@ -166,11 +162,11 @@ gulp.task('index', function () {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(globs.sass, 'sass');
+  gulp.watch(globs.sass, gulp.series('sass'));
   gulp.watch(globs.appWithDefinitions, gulp.series('ts-lint', 'ts-compile'));
-  gulp.watch(globs.templates, 'templates');
-  gulp.watch(globs.index, 'index');
-  gulp.watch(globs.assets, 'copy-assets');
+  gulp.watch(globs.templates, gulp.series('templates'));
+  gulp.watch(globs.index, gulp.series('index'));
+  gulp.watch(globs.assets, gulp.series('copy-assets'));
 });
 
 gulp.task(
