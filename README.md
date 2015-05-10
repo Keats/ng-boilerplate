@@ -51,9 +51,9 @@ $ npm install
 $ gulp
 ```
 
-The docker part is using [fig](http://fig.sh/) so you'll need both docker and fig installed, follow these links to do so: https://docs.docker.com/installation/#installation and http://www.fig.sh/install.html
+The docker part is using [docker-compose](https://docs.docker.com/compose/) so you'll need both docker and docker-compose installed, follow these links to do so: https://docs.docker.com/installation/#installation and https://docs.docker.com/compose/#installation-and-set-up
 
-You can just run fig up and it will set up the environment in a container.
+You can just run `docker-compose up` and it will set up the environment in a container.
 
 ## Structure
 
@@ -99,4 +99,7 @@ $ npm run gulp
 To build the version to distribute, run the following:
 ```bash
 $ npm run gulp build --type dist
+
+# if you are using docker-compose, do it while container is "up"
+$ docker-compose run angular gulp build --type dist
 ```

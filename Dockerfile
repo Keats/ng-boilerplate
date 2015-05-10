@@ -3,7 +3,17 @@ FROM node:0.10-slim
 
 RUN mkdir /home/angular
 
-RUN npm install gulp -g && npm install bower -g
+RUN apt-get -y update \
+    && apt-get install -y \
+        git \
+        bzip2 \
+        libfreetype6 \
+        libfontconfig \
+        python \
+        make \
+        build-essential \
+        && apt-get clean
+RUN npm install gulpjs/gulp-cli#4.0 -g && npm install bower -g
 
 WORKDIR /home/angular
 
