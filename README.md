@@ -1,4 +1,4 @@
-# ng-boilerplate
+# ng-boilerplate - COMPLETELY OUT OF DATE
 [![Build Status](https://travis-ci.org/Keats/ng-boilerplate.png?branch=master)](https://travis-ci.org/Keats/ng-boilerplate)
 [![devDependency Status](https://david-dm.org/Keats/ng-boilerplate/dev-status.svg)](https://david-dm.org/Keats/ng-boilerplate#info=devDependencies)
 
