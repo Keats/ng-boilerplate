@@ -14,7 +14,7 @@ So in short you get:
 
 - automatic SASS compilation using libsass  with auto-prefixing
 - automatic DI annotation (via ng-annotate, no need for .$inject)
-- automatic typescript linting and compilation (+ concatenation and minification on dist environment)
+- automatic typescript linking and compilation (+ concatenation and minification on dist environment)
 - automatic preload of templates using html2js (+ minification on dist environment)
 - continuous testing with karma
 - integration testing with protractor
